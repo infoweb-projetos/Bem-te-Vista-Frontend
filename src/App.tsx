@@ -1,11 +1,15 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import UserForm from './componentes/Cadastro';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import './App.css';
+import UserForm from './componentes/Cadastro/Cadastro';
+import Login from './componentes/Login/Login'
+
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<UserForm/>} />
+        <Route path="/Login" element={<Login/>}/>
+        <Route path="/Cadastro" element={<UserForm/>} />
       </Routes>
     </Router>
   );
