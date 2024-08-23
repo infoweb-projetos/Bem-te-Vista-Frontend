@@ -12,13 +12,22 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log('Sending data:', { email, senha });
     api.post('/auth/login', { email, senha })
       .then(response => {
         console.log('Logged in:', response.data);
-        // Redirecionar ou atualizar estado de autenticação
+        // Redirecionar para o feed
+        localStorage.setItem('token', response.data.access_token);
       })
       .catch(error => {
-        console.error('Error logging in:', error);
+        if (error.response) {
+          console.error('Error response:', error.response.data);
+        } else if (error.request) {
+          console.error('Error request:', error.request);
+        } else {
+          console.error('Error message:', error.message);
+        }
+        alert('Login failed. Please check your email and password.');
       });
   };
 
@@ -52,7 +61,7 @@ const Login = () => {
       <label className="mt-[2rem]">Senha</label>
       <div className="flex flex-col items-start">
       <input
-        type="senha"
+        type="password"
         className="bg-[rgba(0,0,0,0.6)] border border-white w-[18rem] py-[0.2rem] px-[0.4rem] mt-[0.3rem]"
         value={senha}
         onChange={(e) => setSenha(e.target.value)}
