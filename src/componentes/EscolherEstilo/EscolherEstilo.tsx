@@ -1,11 +1,11 @@
 import '../../App.css';
-import './EscolherEstilo.css';
 import React, { useState } from 'react';
 import api from '../../axiosConfig';
 
 import bgforms from '../../imagens/bg-signup.png';
 import cabide from '../../imagens/cabide.svg';
 import logo from '../../imagens/logo.svg';
+import hearticon from '../../imagens/Icons/heart-icon.svg';
 
 // import bgClássico from '../../imagens/bg-clássico.png';
 // import bgMinimalista from '../../imagens/bg-minimalista.png';
@@ -92,7 +92,7 @@ const StyleSelection: React.FC = () => {
 
   return (
     <div className="flex">
-      <div className="bg-[#EDECE7] font-[Martel Sans] flex flex-col items-center justify-center w-4/12 h-[100vh]">
+      <div className="bg-[#EDECE7] fixed font-[Martel Sans] flex flex-col items-center justify-center w-4/12 h-[100vh]">
         <div className="flex flex-col justify-center w-2/4">
           <img src={logo} width="250" alt="Logo" />
           <h2 className="text-4xl mt-[3rem]"><b>Voe</b> no seu estilo</h2>
@@ -100,16 +100,17 @@ const StyleSelection: React.FC = () => {
         </div>
       </div>
       <main
-        className="bg-cover w-8/12 h-[100vh] flex flex-col items-center justify-center"
+        className="bg-cover w-8/12 flex flex-col min-h-[100vh] items-center justify-center ml-[33.33%] py-12"
         style={{ backgroundImage: `url(${bgforms})` }}
       >
-        <img src={cabide} alt="Cabide" />
+        <img src={cabide} alt="Cabide"/>
         <div
           className="bg-[rgba(0,0,0,0.6)] border-2 border-white flex flex-col items-start justify-center text-white w-[28rem] px-12 py-[2rem]"
         >
           <h2 className="font-[Rufina] font-bold text-4xl mb-[1rem]">Escolha seus estilos!</h2>
-          <p className="mb-[2rem]">Não possui preferências? <a href="#" className="hover:underline"><b>Prossiga</b></a></p>
-          <form onSubmit={handleSubmit} className="font-[Martel Sans] flex flex-wrap justify-between items-center">
+          <p className="mb-[1rem]">Não possui preferências? <a href="#" className="hover:underline"><b>Prossiga</b></a></p>
+          <form onSubmit={handleSubmit} className="font-[Martel Sans] text-center">
+            <div className="flex flex-wrap justify-between items-center pr-2 overflow-y-scroll overflow-x-hidden h-[19rem] custom-scroll select-none">
             {styles.map(style => (
               <div className="div-estilo mb-1" key={style.id}>
                 <input
@@ -121,23 +122,24 @@ const StyleSelection: React.FC = () => {
                 />
                 <label
                   htmlFor={`checkbox-${style.id}`}
-                  className="label-estilo bg-cover flex items-center justify-center w-[172px] h-[172px] border border-[#EDECE7] cursor-pointer"
+                  className="label-estilo bg-cover flex items-center justify-center w-[166px] h-[166px] border border-[#EDECE7] cursor-pointer"
                   style={{ backgroundImage: `url(${style.bgImage})` }}
                 >
                   <p className="text-center stroke-text text-2xl">{style.name}</p>
                   <img
-                    src="imagens/Icons/heart-icon.svg"
+                    src={hearticon}
                     width="25"
-                    className={selectedStyles.includes(style.id) ? '' : 'hidden'}
+                    className={selectedStyles.includes(style.id) ? 'absolute z-10 mt-[-172px] mr-[-172px] ' : 'hidden'}
                   />
                 </label>
               </div>
             ))}
+            </div>
             <button
               type="submit"
-              className="bg-[#F9C62E] mx-auto text-black w-[8rem] py-[0.3rem] mt-[1.5rem] hover:cursor-pointer hover:bg-[#EDECE7] transition duration-300 ease-in-out hover:border-[#EDECE7] hover:text-black"
+              className="bg-[#F9C62E] mx-auto text-black w-[8rem] py-[0.3rem] cut-corner mt-[1.5rem] hover:cursor-pointer hover:bg-[#EDECE7] transition duration-300 ease-in-out hover:border-[#EDECE7] hover:text-black"
             >
-              Enviar
+              <p>Enviar</p>
             </button>
           </form>
         </div>
