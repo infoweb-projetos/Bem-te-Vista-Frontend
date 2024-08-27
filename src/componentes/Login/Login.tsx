@@ -11,24 +11,20 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Sending data:', { email, senha });
+    setErrorMessage(''); // Reset the error message before attempting login
+
     api.post('/auth/login', { email, senha })
       .then(response => {
         console.log('Logged in:', response.data);
         localStorage.setItem('token', response.data.access_token);
       })
       .catch(error => {
-        if (error.response) {
-          console.error('Error response:', error.response.data);
-        } else if (error.request) {
-          console.error('Error request:', error.request);
-        } else {
-          console.error('Error message:', error.message);
-        }
-        alert('Login failed. Please check your email and password.');
+        console.error('Erro no login:', error.response ? error.response.data : error.message);
+        setErrorMessage('E-mail ou senha incorretos. Tente novamente.');
       });
   };
 
@@ -79,7 +75,6 @@ const Login = () => {
                   onChange={(e) => setSenha(e.target.value)}
                   placeholder="@Senha123!..."
                   required
-                  
                 />
                 <img
                   src={mostrarSenha ? olhoFechadoIcon : olhoAbertoIcon}
@@ -93,6 +88,11 @@ const Login = () => {
                 Esqueceu a senha?
               </a>
             </div>
+            {errorMessage && (
+              <div className="text-red-500 text-xs mt-[0.5rem]">
+                {errorMessage}
+              </div>
+            )}
             <button
               type="submit"
               className="bg-[#F9C62E] self-center text-black w-[8rem] py-[0.3rem] mt-[1.5rem] hover:cursor-pointer hover:bg-[#EDECE7] transition duration-300 ease-in-out hover:border-[#EDECE7] hover:text-black"
