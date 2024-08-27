@@ -1,6 +1,7 @@
 import '../../App.css';
 import React, { useState } from 'react';
 import api from '../../axiosConfig';
+import { useNavigate } from 'react-router-dom';
 
 import bgforms from '../../imagens/bg-signup.png';
 import cabide from '../../imagens/cabide.svg';
@@ -20,6 +21,7 @@ const UserForm: React.FC = () => {
     const regex = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
     return regex.test(password);
   };
+  const navigate = useNavigate(); 
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,6 +29,7 @@ const UserForm: React.FC = () => {
       api.post('/users', { nome, email, nome_de_usuario, senha })
         .then(response => {
           console.log('Usuário criado:', response.data);
+          navigate('/Login');
         })
         .catch(error => {
           console.error('Erro ao criar usuário:', error);
