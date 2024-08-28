@@ -49,11 +49,11 @@ const StyleSelection: React.FC = () => {
     if (selectedStyles.includes(style)) {
       setSelectedStyles(prev => prev.filter(s => s !== style));
       setMuitoEstilo(''); // Reseta a mensagem de erro ao desmarcar um estilo
-    } else if (selectedStyles.length < 5) {
+    } else if (selectedStyles.length < 3) {
       setSelectedStyles(prev => [...prev, style]);
       setMuitoEstilo(''); // Garante que a mensagem de erro seja removida ao adicionar um estilo dentro do limite
     } else {
-      setMuitoEstilo('Você só pode selecionar até 5 estilos.');
+      setMuitoEstilo('Você só pode selecionar até 3 estilos.');
     }
   };
 
@@ -102,7 +102,7 @@ const StyleSelection: React.FC = () => {
         <img src={cabide} alt="Cabide"/>
         <div className="bg-[rgba(0,0,0,0.6)] border-2 border-white flex flex-col items-start justify-center text-white w-[28rem] px-12 py-[2rem]">
           <h2 className="font-[Rufina] font-bold text-4xl mb-[1rem]">Escolha seus estilos!</h2>
-          <p className="mb-[0]"><b>*No máximo 5</b></p>
+          <p className="mb-[0]"><b>*No máximo 3</b></p>
           <p className="mb-[1rem]">Não possui preferências? <a href="#" className="hover:underline"><b>Prossiga</b></a></p>
           <form onSubmit={handleSubmit} className="font-[Martel Sans] text-center">
             <div className="flex flex-wrap justify-between items-center pr-2 overflow-y-scroll overflow-x-hidden h-[19rem] custom-scroll select-none">
