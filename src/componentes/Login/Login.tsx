@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importar useNavigate
 import api from '../../axiosConfig';
 
 import logo from '../../imagens/logo.svg';
@@ -13,19 +14,23 @@ const Login = () => {
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const navigate = useNavigate(); // Inicializar useNavigate
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorMessage(''); // Reset the error message before attempting login
+    setErrorMessage(''); // Resetar mensagem de erro antes de tentar o login
 
     api.post('/auth/login', { email, senha })
-      .then(response => {
-        console.log('Logged in:', response.data);
-        localStorage.setItem('token', response.data.access_token);
-      })
-      .catch(error => {
-        console.error('Erro no login:', error.response ? error.response.data : error.message);
-        setErrorMessage('E-mail ou senha incorretos. Tente novamente.');
-      });
+  .then(response => {
+    console.log('Logged in:', response.data);
+    localStorage.setItem('token', response.data.access_token);
+    localStorage.setItem('userId', response.data.userId); // Armazene o ID do usuário
+    navigate('/EscolherEstilo');
+  })
+  .catch(error => {
+    console.error('Erro no login:', error.response ? error.response.data : error.message);
+    setErrorMessage('E-mail ou senha incorretos. Tente novamente.');
+  });
   };
 
   const togglePassword = () => {

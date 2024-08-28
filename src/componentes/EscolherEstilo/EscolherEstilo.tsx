@@ -7,38 +7,7 @@ import cabide from '../../imagens/cabide.svg';
 import logo from '../../imagens/logo.svg';
 import hearticon from '../../imagens/Icons/heart-icon.svg';
 
-// import bgClássico from '../../imagens/bg-clássico.png';
-// import bgMinimalista from '../../imagens/bg-minimalista.png';
-// import bgBoho from '../../imagens/bg-boho.png';
-// import bgVintage from '../../imagens/bg-vintage.png';
-// import bgRetro from '../../imagens/bg-retro.png';
-// import bgPunk from '../../imagens/bg-punk.png';
-// import bgGótico from '../../imagens/bg-gótico.png';
-// import bgGrunge from '../../imagens/bg-grunge.png';
-// import bgStreetwear from '../../imagens/bg-streetwear.png';
-// import bgEsportivo from '../../imagens/bg-esportivo.png';
-// import bgPreppy from '../../imagens/bg-preppy.png';
-// import bgChic from '../../imagens/bg-chic.png';
-// import bgRoker from '../../imagens/bg-roker.png';
-// import bgRomântico from '../../imagens/bg-romântico.png';
-// import bgEclético from '../../imagens/bg-eclético.png';
-// import bgFuturista from '../../imagens/bg-futurista.png';
-// import bgCowboy from '../../imagens/bg-cowboy.png';
-// import bgMilitar from '../../imagens/bg-militar.png';
-// import bgGlam from '../../imagens/bg-glam.png';
-// import bgGrungeRevival from '../../imagens/bg-grunge-revival.png';
-// import bgCyberpunk from '../../imagens/bg-cyberpunk.png';
-// import bgSafari from '../../imagens/bg-safari.png';
-// import bgHipster from '../../imagens/bg-hipster.png';
-// import bgModerno from '../../imagens/bg-moderno.png';
-// import bgCasual from '../../imagens/bg-casual.png';
-// import bgFormal from '../../imagens/bg-formal.png';
-// import bgArtsy from '../../imagens/bg-artsy.png';
-// import bgKawaii from '../../imagens/bg-kawaii.png';
-// import bgAndrógino from '../../imagens/bg-andrógeno.png';
-// import bgPinup from '../../imagens/bg-pinup.png';
-// import bgY2K from '../../imagens/bg-y2k.png';
-
+// Lista de estilos com a imagem de fundo associada
 const styles = [
   { id: 'clássico', name: 'Clássico', bgImage: bgforms },
   { id: 'minimalista', name: 'Minimalista', bgImage: bgforms },
@@ -54,7 +23,6 @@ const styles = [
   { id: 'chic', name: 'Chic', bgImage: bgforms },
   { id: 'roker', name: 'Roker', bgImage: bgforms },
   { id: 'romântico', name: 'Romântico', bgImage: bgforms },
-  { id: 'eclético', name: 'Eclético', bgImage: bgforms },
   { id: 'futurista', name: 'Futurista', bgImage: bgforms },
   { id: 'cowboy', name: 'Cowboy/Western', bgImage: bgforms },
   { id: 'militar', name: 'Militar', bgImage: bgforms },
@@ -75,20 +43,48 @@ const styles = [
 
 const StyleSelection: React.FC = () => {
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
+  const [muitoEstilo, setMuitoEstilo] = useState('');
 
   const handleStyleChange = (style: string) => {
-    setSelectedStyles(prev =>
-      prev.includes(style)
-        ? prev.filter(s => s !== style)
-        : [...prev, style]
-    );
+    if (selectedStyles.includes(style)) {
+      setSelectedStyles(prev => prev.filter(s => s !== style));
+      setMuitoEstilo(''); // Reseta a mensagem de erro ao desmarcar um estilo
+    } else if (selectedStyles.length < 5) {
+      setSelectedStyles(prev => [...prev, style]);
+      setMuitoEstilo(''); // Garante que a mensagem de erro seja removida ao adicionar um estilo dentro do limite
+    } else {
+      setMuitoEstilo('Você só pode selecionar até 5 estilos.');
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Enviar estilos selecionados para o backend, ou prossiga para a próxima página
-    console.log('Estilos selecionados:', selectedStyles);
+  
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId'); // Obtém o ID do usuário do localStorage
+  
+      if (!token || !userId) {
+        alert('Usuário não autenticado.');
+        return;
+      }
+  
+      // Envie a solicitação para atualizar os estilos
+      await api.post(`/users/${userId}/styles`, {
+        styles: selectedStyles,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      alert('Estilos atualizados com sucesso!');
+    } catch (error) {
+      console.error('Erro ao atualizar estilos:', error);
+      alert('Erro ao atualizar estilos.');
+    }
   };
+  
 
   return (
     <div className="flex">
@@ -104,37 +100,42 @@ const StyleSelection: React.FC = () => {
         style={{ backgroundImage: `url(${bgforms})` }}
       >
         <img src={cabide} alt="Cabide"/>
-        <div
-          className="bg-[rgba(0,0,0,0.6)] border-2 border-white flex flex-col items-start justify-center text-white w-[28rem] px-12 py-[2rem]"
-        >
+        <div className="bg-[rgba(0,0,0,0.6)] border-2 border-white flex flex-col items-start justify-center text-white w-[28rem] px-12 py-[2rem]">
           <h2 className="font-[Rufina] font-bold text-4xl mb-[1rem]">Escolha seus estilos!</h2>
+          <p className="mb-[0]"><b>*No máximo 5</b></p>
           <p className="mb-[1rem]">Não possui preferências? <a href="#" className="hover:underline"><b>Prossiga</b></a></p>
           <form onSubmit={handleSubmit} className="font-[Martel Sans] text-center">
             <div className="flex flex-wrap justify-between items-center pr-2 overflow-y-scroll overflow-x-hidden h-[19rem] custom-scroll select-none">
-            {styles.map(style => (
-              <div className="div-estilo mb-1" key={style.id}>
-                <input
-                  type="checkbox"
-                  value={style.id}
-                  className="checkboxstyle"
-                  id={`checkbox-${style.id}`}
-                  onChange={() => handleStyleChange(style.id)}
-                />
-                <label
-                  htmlFor={`checkbox-${style.id}`}
-                  className="label-estilo bg-cover flex items-center justify-center w-[166px] h-[166px] border border-[#EDECE7] cursor-pointer"
-                  style={{ backgroundImage: `url(${style.bgImage})` }}
-                >
-                  <p className="text-center stroke-text text-2xl">{style.name}</p>
-                  <img
-                    src={hearticon}
-                    width="25"
-                    className={selectedStyles.includes(style.id) ? 'absolute z-10 mt-[-172px] mr-[-172px] ' : 'hidden'}
+              {styles.map(style => (
+                <div className="div-estilo mb-1" key={style.id}>
+                  <input
+                    type="checkbox"
+                    value={style.id}
+                    className="checkboxstyle"
+                    id={`checkbox-${style.id}`}
+                    onChange={() => handleStyleChange(style.id)}
+                    checked={selectedStyles.includes(style.id)}
+                    disabled={!selectedStyles.includes(style.id) && selectedStyles.length >= 5}
                   />
-                </label>
-              </div>
-            ))}
+                  <label
+                    htmlFor={`checkbox-${style.id}`}
+                    className="label-estilo bg-cover flex items-center justify-center w-[166px] h-[166px] border border-[#EDECE7] cursor-pointer"
+                    style={{ backgroundImage: `url(${style.bgImage})` }}
+                  >
+                    <p className="text-center stroke-text text-2xl">{style.name}</p>
+                    <img
+                      src={hearticon}
+                      width="25"
+                      className={selectedStyles.includes(style.id) ? 'absolute z-10 mt-[-172px] mr-[-172px]' : 'hidden'}
+                    />
+                  </label>
+                </div>
+              ))}
             </div>
+            <div className="w-[18rem] mt-2">
+              {muitoEstilo && <p className="text-red-500">{muitoEstilo}</p>}
+            </div>
+
             <button
               type="submit"
               className="bg-[#F9C62E] mx-auto text-black w-[8rem] py-[0.3rem] cut-corner mt-[1.5rem] hover:cursor-pointer hover:bg-[#EDECE7] transition duration-300 ease-in-out hover:border-[#EDECE7] hover:text-black"
