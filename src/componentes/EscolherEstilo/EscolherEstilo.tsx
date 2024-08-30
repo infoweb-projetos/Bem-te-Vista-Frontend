@@ -1,5 +1,6 @@
 import '../../App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../axiosConfig';
 
 import bgforms from '../../imagens/bg-signup.png';
@@ -44,6 +45,16 @@ const styles = [
 const StyleSelection: React.FC = () => {
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
   const [muitoEstilo, setMuitoEstilo] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.error('User ID não encontrado.');
+      alert('Usuário não autenticado. Redirecionando para o login.');
+      navigate('/login'); // Redireciona para a página de login
+    }
+  }, [navigate]);
 
   const handleStyleChange = (style: string) => {
     if (selectedStyles.includes(style)) {
@@ -59,32 +70,35 @@ const StyleSelection: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId'); // Obtém o ID do usuário do localStorage
-  
+
       if (!token || !userId) {
         alert('Usuário não autenticado.');
         return;
       }
-  
+
       // Envie a solicitação para atualizar os estilos
+      console.log(userId);
+      console.log(selectedStyles);
+      
+      
       await api.post(`/users/${userId}/styles`, {
-        styles: selectedStyles,
+        estilos: selectedStyles,
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       alert('Estilos atualizados com sucesso!');
     } catch (error) {
       console.error('Erro ao atualizar estilos:', error);
       alert('Erro ao atualizar estilos.');
     }
   };
-  
 
   return (
     <div className="flex">
