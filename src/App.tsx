@@ -11,7 +11,10 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/Login" element={<Login />} />
         <Route path="/Cadastro" element={<UserForm />} />
-        <Route path="/EscolherEstilo" element={<AuthRoute element={<StyleSelection />} />} />
+        <Route 
+          path="/:username/EscolherEstilo"
+          element={<AuthRoute element={<StyleSelection />} />} 
+        />
       </Routes>
     </Router>
   );

@@ -7,6 +7,7 @@ import cabide from '../../imagens/cabide.svg';
 import bgforms from '../../imagens/bg-login.png';
 import olhoAbertoIcon from '../../imagens/Icons/olho-aberto-icon.svg';
 import olhoFechadoIcon from '../../imagens/Icons/olho-fechado-icon.svg';
+import { AxiosError } from 'axios'; // Importe AxiosError para tratamento de erro
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,21 +17,35 @@ const Login = () => {
 
   const navigate = useNavigate(); // Inicializar useNavigate
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage(''); // Resetar mensagem de erro antes de tentar o login
 
-    api.post('/auth/login', { email, senha })
-  .then(response => {
-    console.log('Logged in:', response.data);
-    localStorage.setItem('token', response.data.access_token);
-    localStorage.setItem('userId', response.data.userId); // Armazene o ID do usuário
-    navigate('/EscolherEstilo');
-  })
-  .catch(error => {
-    console.error('Erro no login:', error.response ? error.response.data : error.message);
-    setErrorMessage('E-mail ou senha incorretos. Tente novamente.');
-  });
+    try {
+      const response = await api.post('/auth/login', { email, senha });
+      console.log('Logged in:', response.data);
+
+      // Armazene o token e o ID do usuário, se disponíveis
+      localStorage.setItem('token', response.data.access_token);
+      if (response.data.userId) {
+        localStorage.setItem('userId', response.data.userId); // Armazene o ID do usuário
+      }
+
+      // Supondo que o username está na resposta de login
+      const username = response.data.username; // Ajuste conforme necessário
+
+      // Redireciona para a página de escolha de estilo com o nome de usuário
+      navigate(`/${username}/EscolherEstilo`);
+    } catch (error) {
+      // Verifique se o erro é uma instância de AxiosError
+      if (error instanceof AxiosError) {
+        console.error('Erro no login:', error.response ? error.response.data : error.message);
+        setErrorMessage('E-mail ou senha incorretos. Tente novamente.');
+      } else {
+        console.error('Erro inesperado:', error);
+        setErrorMessage('Ocorreu um erro inesperado. Tente novamente.');
+      }
+    }
   };
 
   const togglePassword = () => {

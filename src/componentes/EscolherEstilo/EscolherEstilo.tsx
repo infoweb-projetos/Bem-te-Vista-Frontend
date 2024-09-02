@@ -10,22 +10,22 @@ import hearticon from '../../imagens/Icons/heart-icon.svg';
 
 // Lista de estilos com a imagem de fundo associada
 const styles = [
-  { id: 'clássico', name: 'Clássico', bgImage: bgforms },
+  { id: 'classico', name: 'Clássico', bgImage: bgforms },
   { id: 'minimalista', name: 'Minimalista', bgImage: bgforms },
   { id: 'boho', name: 'Boho', bgImage: bgforms },
   { id: 'vintage', name: 'Vintage', bgImage: bgforms },
   { id: 'retro', name: 'Retro', bgImage: bgforms },
   { id: 'punk', name: 'Punk', bgImage: bgforms },
-  { id: 'gótico', name: 'Gótico', bgImage: bgforms },
+  { id: 'gotico', name: 'Gótico', bgImage: bgforms },
   { id: 'grunge', name: 'Grunge', bgImage: bgforms },
   { id: 'streetwear', name: 'Streetwear', bgImage: bgforms },
   { id: 'esportivo', name: 'Esportivo', bgImage: bgforms },
   { id: 'preppy', name: 'Preppy', bgImage: bgforms },
   { id: 'chic', name: 'Chic', bgImage: bgforms },
   { id: 'roker', name: 'Roker', bgImage: bgforms },
-  { id: 'romântico', name: 'Romântico', bgImage: bgforms },
+  { id: 'romantico', name: 'Romântico', bgImage: bgforms },
   { id: 'futurista', name: 'Futurista', bgImage: bgforms },
-  { id: 'cowboy', name: 'Cowboy/Western', bgImage: bgforms },
+  { id: 'cowboy', name: 'Cowboy', bgImage: bgforms },
   { id: 'militar', name: 'Militar', bgImage: bgforms },
   { id: 'glam', name: 'Glam', bgImage: bgforms },
   { id: 'grunge-revival', name: 'Grunge Revival', bgImage: bgforms },
@@ -37,7 +37,7 @@ const styles = [
   { id: 'formal', name: 'Formal', bgImage: bgforms },
   { id: 'artsy', name: 'Artsy', bgImage: bgforms },
   { id: 'kawaii', name: 'Kawaii', bgImage: bgforms },
-  { id: 'andrógino', name: 'Andrógino', bgImage: bgforms },
+  { id: 'androgino', name: 'Andrógino', bgImage: bgforms },
   { id: 'pinup', name: 'Pin-up', bgImage: bgforms },
   { id: 'y2k', name: 'Y2K', bgImage: bgforms },
 ];
@@ -86,7 +86,7 @@ const StyleSelection: React.FC = () => {
       
       
       await api.post(`/users/${userId}/styles`, {
-        estilos: selectedStyles,
+        styles: selectedStyles,
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
