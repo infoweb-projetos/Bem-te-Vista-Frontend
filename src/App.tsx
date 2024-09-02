@@ -4,6 +4,7 @@ import UserForm from './componentes/Cadastro/Cadastro';
 import Login from './componentes/Login/Login';
 import StyleSelection from './componentes/EscolherEstilo/EscolherEstilo';
 import AuthRoute from './AuthRoute';
+import MeuPerfil from './componentes/MeuPerfil/MeuPerfil';
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,10 @@ const App: React.FC = () => {
         <Route 
           path="/:username/EscolherEstilo"
           element={<AuthRoute element={<StyleSelection />} />} 
+        />
+        <Route 
+          path="/:username/MeuPerfil"
+          element={<AuthRoute element={<MeuPerfil />} />} 
         />
       </Routes>
     </Router>

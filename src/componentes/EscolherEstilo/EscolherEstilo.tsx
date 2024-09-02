@@ -45,14 +45,19 @@ const styles = [
 const StyleSelection: React.FC = () => {
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
   const [muitoEstilo, setMuitoEstilo] = useState('');
+  const [username, setUsername] = useState<string | null>(null); // Adiciona estado para o username
   const navigate = useNavigate();
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
-    if (!userId) {
-      console.error('User ID não encontrado.');
+    const userName = localStorage.getItem('username'); // Obtém o nome de usuário da localStorage
+    console.log('Username:', userName); // Adicione este log
+    if (!userId || !userName) {
+      console.error('User ID ou nome de usuário não encontrados.');
       alert('Usuário não autenticado. Redirecionando para o login.');
       navigate('/login'); // Redireciona para a página de login
+    } else {
+      setUsername(userName); // Define o nome de usuário no estado
     }
   }, [navigate]);
 
@@ -81,10 +86,6 @@ const StyleSelection: React.FC = () => {
       }
 
       // Envie a solicitação para atualizar os estilos
-      console.log(userId);
-      console.log(selectedStyles);
-      
-      
       await api.post(`/users/${userId}/styles`, {
         styles: selectedStyles,
       }, {
@@ -92,8 +93,8 @@ const StyleSelection: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      alert('Estilos atualizados com sucesso!');
+      navigate(`/${username}/MeuPerfil`); // Navega para a página com o username
+    
     } catch (error) {
       console.error('Erro ao atualizar estilos:', error);
       alert('Erro ao atualizar estilos.');
