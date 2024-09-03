@@ -16,18 +16,23 @@ import previewBannerImage from '../../imagens/bannerGenerico.png';
 import previewProfileImage from '../../imagens/fotoPerfilGenerico.png';
 import agulhaFav from '../../imagens/argulha.png';
 import bordaBtv from '../../imagens/borda-btv.svg';
+import axios from 'axios'; 
 
 const MeuPerfil: React.FC = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const [nome, setnome] = useState<string | null>(null);
+  //const [estilos, setEstilos] = useState<string[]>([]);
   const navigate = useNavigate();
+
+  const [estilos, setEstilos] = useState<{ estiloId: string; nome: string }[]>([]);
+
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
     const storedUsername = localStorage.getItem('username'); 
-    const storednome = localStorage.getItem('nome');// Obtém o nome de usuário do localStorage
+    const storednome = localStorage.getItem('nome');
     if (!userId || !storedUsername || !storednome) {
       console.error('User ID ou username não encontrado.');
       alert('Usuário não autenticado. Redirecionando para o login.');
@@ -35,8 +40,20 @@ const MeuPerfil: React.FC = () => {
     } else {
       setUsername(storedUsername);
       setnome(storednome); // Define o nome de usuário no estado
+      fetchEstilos(userId);
     }
   }, [navigate]);
+
+    const fetchEstilos = async (userId: string) => {
+        try {
+          const response = await axios.get(`http://localhost:3000/users/${userId}/styles`);
+          console.log('Estilos recebidos:', response.data);
+          setEstilos(response.data); // Atualiza o estado com os estilos do usuário
+        } catch (error) {
+          console.error('Erro ao buscar estilos:', error);
+          alert('Não foi possível carregar os estilos.');
+        }
+      };
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -215,20 +232,17 @@ const handleDeleteAccount = async () => {
                 {/* DESCRIÇÃO PERFIL */}
                 <p className="text-lg mt-4 w-[32rem]">Sobre o perfil</p>
                 {/* ESTILOS ESCOLHIDOS */}
-                <div className="flex text-lg mt-2">
-                    <div style={{ backgroundImage: `url(${bordaBtv})` }} className=" bg-cover w-[9rem] h-[3rem] mr-2">
-                        {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
-                        <p className="pt-4 text-center pr-4">Estilo1</p>
-                    </div>
-                    <div style={{ backgroundImage: `url(${bordaBtv})` }} className=" bg-cover w-[9rem] h-[3rem] mr-2">
-                        {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
-                        <p className="pt-4 text-center pr-4">Estilo2</p>
-                    </div>
-                    <div style={{ backgroundImage: `url(${bordaBtv})` }} className=" bg-cover w-[9rem] h-[3rem] mr-2">
-                        {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
-                        <p className="pt-4 text-center pr-4">Estilo3</p>
-                    </div>
-                </div>
+                <ul className="flex text-lg mt-2">
+  {estilos.length > 0 ? (
+    estilos.map((estilo) => (
+      <li key={estilo.estiloId} className="bg-white border border-gray-300 p-4 rounded-lg shadow">
+        {estilo.nome}
+      </li>
+    ))
+  ) : (
+    <li className="text-gray-500">Carregando estilos... Ou você ainda não possui nenhum estilo.</li>
+  )}
+</ul>
               </div>
               
                 <div className="flex flex-col mt-[3rem] items-center">
