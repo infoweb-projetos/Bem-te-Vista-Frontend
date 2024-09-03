@@ -12,83 +12,75 @@ import closeIcon from '../../imagens/Icons/close-icon.svg';
 import needleIcon from '../../imagens/Icons/needle-icon.svg';
 import pencilIcon from '../../imagens/Icons/pencil-icon.svg';
 import borderFeed from '../../imagens/borda-feed.svg';
-import previewBannerImage from '../../imagens/bg-forms.png';
+import previewBannerImage from '../../imagens/bannerGenerico.png';
+import previewProfileImage from '../../imagens/fotoPerfilGenerico.png';
+import agulhaFav from '../../imagens/argulha.png';
+import bordaBtv from '../../imagens/borda-btv.svg';
 
 const MeuPerfil: React.FC = () => {
-    const [showSubMenu, setShowSubMenu] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [bannerPreview, setBannerPreview] = useState<string | null>(null);
-    const [profilePreview, setProfilePreview] = useState<string | null>(null);
-    const [favPreview, setFavPreview] = useState<string | null>(null);
-    const [username, setUsername] = useState<string | null>(null);
-    const navigate = useNavigate();
-  
-    useEffect(() => {
-      const userId = localStorage.getItem('userId');
-      const storedUsername = localStorage.getItem('username'); // Obtém o nome de usuário do localStorage
-      if (!userId || !storedUsername) {
-        console.error('User ID ou username não encontrado.');
-        alert('Usuário não autenticado. Redirecionando para o login.');
-        navigate('/login'); // Redireciona para a página de login
-      } else {
-        setUsername(storedUsername); // Define o nome de usuário no estado
-      }
-    }, [navigate]);
-  
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, setPreview: React.Dispatch<React.SetStateAction<string | null>>) => {
-      if (event.target.files && event.target.files.length > 0) {
-        const src = URL.createObjectURL(event.target.files[0]);
-        setPreview(src);
-      }
-    };
-  
-    const handleOpenModal = () => {
-      setShowModal(true);
-      const esmaecer = document.getElementById('esmaecer');
-      if (esmaecer) esmaecer.style.display = 'block';
-    };
-  
-    const handleCloseModal = () => {
-      setShowModal(false);
-      const esmaecer = document.getElementById('esmaecer');
-      if (esmaecer) esmaecer.style.display = 'none';
-    };
-    const handleLogout = () => {
-      localStorage.removeItem('userId');
-      localStorage.removeItem('username');
-      navigate('/login');
+  const [showSubMenu, setShowSubMenu] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    const storedUsername = localStorage.getItem('username'); // Obtém o nome de usuário do localStorage
+    if (!userId || !storedUsername) {
+      console.error('User ID ou username não encontrado.');
+      alert('Usuário não autenticado. Redirecionando para o login.');
+      navigate('/login'); // Redireciona para a página de login
+    } else {
+      setUsername(storedUsername); // Define o nome de usuário no estado
+    }
+  }, [navigate]);
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+    const esmaecer = document.getElementById('esmaecer');
+    if (esmaecer) esmaecer.style.display = 'block';
   };
 
-  const handleDeleteAccount = async () => {
-    try {
-        const userId = localStorage.getItem('userId');
-        if (!userId) {
-            throw new Error('Usuário não autenticado.');
-        }
-
-        console.log(userId);
-        
-        const response = await fetch(`http://localhost:3000/users/${userId}`, {
-            method: 'DELETE',
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Erro ao excluir a conta: ${errorText}`);
-        }
-
-        // Remove o usuário do armazenamento local e redireciona para a página de login
-        localStorage.removeItem('userId');
-        localStorage.removeItem('username');
-        navigate('/Cadastro');
-    } catch (error) {
-        // Verifica se o erro é uma instância de Error
-        const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
-        console.error('Erro ao excluir conta:', error);
-        alert('Ocorreu um erro ao excluir sua conta. Detalhes: ' + errorMessage);
-    }
+  const handleCloseModal = () => {
+    setShowModal(false);
+    const esmaecer = document.getElementById('esmaecer');
+    if (esmaecer) esmaecer.style.display = 'none';
+  };
+  const handleLogout = () => {
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    navigate('/login');
 };
-    
+
+const handleDeleteAccount = async () => {
+  try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+          throw new Error('Usuário não autenticado.');
+      }
+
+      console.log(userId);
+      
+      const response = await fetch(`http://localhost:3000/users/${userId}`, {
+          method: 'DELETE',
+      });
+
+      if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Erro ao excluir a conta: ${errorText}`);
+      }
+
+      // Remove o usuário do armazenamento local e redireciona para a página de login
+      localStorage.removeItem('userId');
+      localStorage.removeItem('username');
+      navigate('/Cadastro');
+  } catch (error) {
+      // Verifica se o erro é uma instância de Error
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      console.error('Erro ao excluir conta:', error);
+      alert('Ocorreu um erro ao excluir sua conta. Detalhes: ' + errorMessage);
+  }
+};
 
   return (
     <div className="flex">
@@ -140,7 +132,7 @@ const MeuPerfil: React.FC = () => {
               {showSubMenu && (
                 <div id="subMenuConfig" className="hover:cursor-pointer flex absolute z-10 text-lg ml-[12rem] w-[10rem] bg-[#EDECE7] border border-black flex-col p-4 text-red-500">
                   <p onClick={handleLogout} className="hover:underline">Sair</p>
-                  <button onClick={handleOpenModal} className="hover:underline cursor-pointer justify-center">Excluir a conta</button>
+                  <button onClick={handleOpenModal} className="hover:underline cursor-pointer text-left">Excluir a conta</button>
                 </div>
               )}
             </ul>
@@ -156,7 +148,7 @@ const MeuPerfil: React.FC = () => {
       </div>
 
       {/* MAIN */}
-      <main className="bg-[#EDECE7] w-[80%] ml-[20%]">
+      <main className="bg-[#EDECE7] w-[80%] ml-[20%] min-h-[100vh] pb-12">
         {/* Modal de excluir usuário */}
         {showModal && (
           <div id="modalExcluir" className="absolute z-10 w-[26rem] mx-auto left-0 right-0 mt-24 py-2 px-10 bg-[#EDECE7] border border-black text-center">
@@ -172,80 +164,99 @@ const MeuPerfil: React.FC = () => {
           </div>
         )}
 
-        {/* Banner */}
-        <div className="bg-[url('./imagens/bg-forms.png')] bg-cover w-full h-[40vh]" />
+        {/* BANNER */}
+        <div style={{backgroundImage : `url(${previewBannerImage})`}} className="bg-cover w-full h-[40vh]">
+        
+        </div>
 
-        <div className="w-[65rem] mx-auto max-xl:w-[55rem] max-lg:w-[37rem]">
-          <div className="flex mx-auto justify-between">
-            <div>
-              {/* Foto de perfil */}
-              <img src={previewBannerImage} width="220" className="rounded-full mt-[-8rem]" alt="Profile" />
+        <div className="w-[1050px] mx-auto flex flex-col w-full max-xl:w-[55rem] max-lg:w-[37rem]">
+          <div className="flex mx-auto justify-between w-full">
+            <div className="flex justify-between w-full">
+              <div >
+              {/* FOTO DE PERFIL */}
+              <div>
+                <img src={previewProfileImage} width="220" className="rounded-full mt-[-8rem]" alt="Profile" />
+                
+              </div>
+              
               <div className="flex items-center">
-              <h2 className="text-3xl font-semibold mr-4">{username ? username : 'Nome do Perfil'}</h2>
-                <Link to="/editar-perfil" className="flex items-center cursor-pointer border border-black text-lg bg-white transition duration-300 ease-in-out py-2 px-4 rounded-l-md">
-                  <img src={pencilIcon} width="20" alt="Edit" />
-                  <div className="py-2 px-4 rounded-r-md">Editar Perfil</div>
-                </Link>
+                <h2 className="text-3xl font-semibold mr-4">Nome de usuário</h2>
+                
+                  <Link to="/editar-perfil" className="cut-corner-border flex bg-black text-xl font-medium">
+                      <div className="bg-[#EDECE7] hover:bg-[#F9C62E] transition duration-300 ease-in-out w-[20rem]">
+                          <div className="w-full h-full flex items-center justify-between px-2 py-1">
+                              <img src={pencilIcon} width="20" />
+                              <p>Editar perfil</p>
+                          </div>
+                      </div>
+                  </Link>
+                
               </div>
-              <p className="text-lg">Sobre o perfil</p>
-              <ul className="flex">
-                <li className="mr-4">
-                  <p><b>10</b> Publicações</p>
-                </li>
-                <li className="mr-4">
-                  <p><b>20</b> Seguidores</p>
-                </li>
-              </ul>
-
-              {/* Botões de visualização de imagens */}
-              <div className="my-4 flex flex-col items-center">
-                <div className="flex flex-col items-center">
-                  <label htmlFor="banner" id="label-banner" className="cursor-pointer text-lg p-2 bg-white border border-black rounded-lg">
-                    Escolha um banner
-                    <input
-                      type="file"
-                      id="banner"
-                      className="hidden"
-                      onChange={(e) => handleFileChange(e, setBannerPreview)}
-                    />
-                  </label>
-                  {bannerPreview && (
-                    <img src={bannerPreview} id="file-ip-1-preview" className="mt-2 rounded-lg" alt="Banner Preview" />
-                  )}
-                </div>
-
-                <div className="flex flex-col items-center">
-                  <label htmlFor="profile" id="label-profile" className="cursor-pointer text-lg p-2 bg-white border border-black rounded-lg">
-                    Escolha uma foto de perfil
-                    <input
-                      type="file"
-                      id="profile"
-                      className="hidden"
-                      onChange={(e) => handleFileChange(e, setProfilePreview)}
-                    />
-                  </label>
-                  {profilePreview && (
-                    <img src={profilePreview} id="file-ip-2-preview" className="mt-2 rounded-full" alt="Profile Preview" />
-                  )}
-                </div>
-
-                <div className="flex flex-col items-center">
-                  <label htmlFor="fav" id="label-fav" className="cursor-pointer text-lg p-2 bg-white border border-black rounded-lg">
-                    Escolha uma imagem favorita
-                    <input
-                      type="file"
-                      id="fav"
-                      className="hidden"
-                      onChange={(e) => handleFileChange(e, setFavPreview)}
-                    />
-                  </label>
-                  {favPreview && (
-                    <img src={favPreview} id="file-ip-3-preview" className="mt-2 rounded-lg" alt="Favorite Preview" />
-                  )}
+                <h2 className="text-2xl font-semibold mr-4">{username ? username : 'Nome do Perfil'}</h2>
+                
+                <ul className="flex mt-2 text-lg">
+                    <li className="mr-4">
+                      {/* NÚMERO SEGUINDO */}
+                        <p>Seguindo <b>0</b></p>
+                    </li>
+                    <li className="mx-2">
+                      {/* NÚMERO SEGUIDORES */}
+                        <p>Seguidores <b>0</b></p>
+                    </li>
+                    <li className="mx-2">
+                      {/* NÚMERO PUBLICAÇÕES */}
+                        <p>Publicações <b>0</b></p>
+                    </li>
+                </ul>
+                {/* DESCRIÇÃO PERFIL */}
+                <p className="text-lg mt-4 w-[32rem]">Sobre o perfil</p>
+                {/* ESTILOS ESCOLHIDOS */}
+                <div className="flex text-lg mt-2">
+                    <div style={{ backgroundImage: `url(${bordaBtv})` }} className=" bg-cover w-[9rem] h-[3rem] mr-2">
+                        {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
+                        <p className="pt-4 text-center pr-4">Estilo1</p>
+                    </div>
+                    <div style={{ backgroundImage: `url(${bordaBtv})` }} className=" bg-cover w-[9rem] h-[3rem] mr-2">
+                        {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
+                        <p className="pt-4 text-center pr-4">Estilo2</p>
+                    </div>
+                    <div style={{ backgroundImage: `url(${bordaBtv})` }} className=" bg-cover w-[9rem] h-[3rem] mr-2">
+                        {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
+                        <p className="pt-4 text-center pr-4">Estilo3</p>
+                    </div>
                 </div>
               </div>
+              
+                <div className="flex flex-col mt-[3rem] items-center">
+                  {/* LOOK FAVORITO */}
+                  <h2 className="mb-4 text-xl font-medium">Seu Look Favorito</h2>
+                    <div className="flex flex-col items-center">
+                      <div className="w-[300px] h-[300px] bg-[#C4C4C4] flex items-center justify-center">
+                      </div>
+                      <img src={agulhaFav} className="mt-[-19.5rem] max-xl:mt-[-15rem] max-xl:ml-0" width="350" />
+                    
+                    
+                </div>
+                
+              </div>
+              
             </div>
           </div>
+          <div className="flex text-2xl w-full mx-auto ">
+                    <div className="flex">
+                        <a className="mr-[3rem]">
+                            <h3 className="underline decoration-[#F9C62E] hover:cursor-pointer">Feed</h3>
+                        </a>
+                        <a className="hover:underline hover:cursor-pointer">
+                            <h3>Coleções</h3>
+                        </a>
+                    </div>
+        
+                </div>
+                {/* FEED */}
+                <div className="mt-[2rem] flex flex-col items-center justify-center pb-16 w-full">
+                    <p className="text-2xl text-gray-500 mt-10">Sem postagens</p>
+                </div>
         </div>
       </main>
     </div>

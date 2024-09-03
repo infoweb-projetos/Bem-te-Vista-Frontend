@@ -62,7 +62,7 @@ const Login = () => {
       <div className="static h-screen bg-[#EDECE7] font-[Martel Sans] flex flex-col items-center justify-center w-4/12">
         <div className="flex flex-col justify-center w-2/4">
           <img src={logo} width="250" alt="Logo" />
-          <h2 className="text-4xl mt-[3rem]">
+          <h2 className="text-3xl mt-[3rem]">
             <b>Voe</b> no seu estilo
           </h2>
           <p className="mt-[1rem] text-2xl">
@@ -120,7 +120,7 @@ const Login = () => {
             )}
             <button
               type="submit"
-              className="bg-[#F9C62E] self-center text-black w-[8rem] py-[0.3rem] mt-[1.5rem] hover:cursor-pointer hover:bg-[#EDECE7] transition duration-300 ease-in-out hover:border-[#EDECE7] hover:text-black"
+              className="bg-[#F9C62E] self-center text-black w-[8rem] py-[0.3rem] cut-corner mt-[1.5rem] hover:cursor-pointer hover:bg-[#EDECE7] transition duration-300 ease-in-out hover:border-[#EDECE7] hover:text-black"
             >
               Entrar
             </button>

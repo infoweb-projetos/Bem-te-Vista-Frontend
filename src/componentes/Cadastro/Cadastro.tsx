@@ -8,6 +8,7 @@ import cabide from '../../imagens/cabide.svg';
 import logo from '../../imagens/logo.svg';
 import olhoAbertoIcon from '../../imagens/Icons/olho-aberto-icon.svg';
 import olhoFechadoIcon from '../../imagens/Icons/olho-fechado-icon.svg';
+import cadeadoIcon from '../../imagens/Icons/cadeado-icon.svg';
 
 const UserForm: React.FC = () => {
   const [nome, setName] = useState('');
@@ -82,7 +83,10 @@ const UserForm: React.FC = () => {
               required
               minLength={4}
             />
-            <label className="mt-[0.8rem] self-start">E-mail</label>
+            <div className="flex items-center self-start mt-[0.8rem] max-xl:mt-[0.5rem]">
+                <img src={cadeadoIcon} className="pr-2" />
+                <label>E-mail</label>
+            </div>
             <input
               placeholder="seuemail@gmail.com..."
               type="email"
@@ -91,7 +95,10 @@ const UserForm: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <label className="mt-[0.8rem] self-start">Senha</label>
+            <div className="flex items-center self-start mt-[0.8rem] max-xl:mt-[0.5rem]">
+                <img src={cadeadoIcon} className="pr-2" />
+                <label>Senha</label>
+            </div>
             <div className="flex flex-col items-center">
               <div className="flex justify-between border border-[#EDECE7] w-[18rem] py-[0.4rem] px-[0.4rem] mt-[0.3rem]">
                 <input
@@ -114,7 +121,7 @@ const UserForm: React.FC = () => {
                 {senhaErro && <p className="text-red-500">{senhaErro}</p>}
               </div>
             </div>
-            <button type="submit" className="bg-[#F9C62E] self-center text-black w-[8rem] py-[0.3rem] mt-[1.5rem] hover:cursor-pointer hover:bg-[#EDECE7] transition duration-300 ease-in-out hover:border-[#EDECE7] hover:text-black">
+            <button type="submit" className="bg-[#F9C62E] self-center cut-corner text-black w-[8rem] py-[0.3rem] mt-[1.5rem] hover:cursor-pointer hover:bg-[#EDECE7] transition duration-300 ease-in-out hover:border-[#EDECE7] hover:text-black">
               Criar
             </button>
           </form>
