@@ -21,17 +21,20 @@ const MeuPerfil: React.FC = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
+  const [nome, setnome] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
-    const storedUsername = localStorage.getItem('username'); // Obtém o nome de usuário do localStorage
-    if (!userId || !storedUsername) {
+    const storedUsername = localStorage.getItem('username'); 
+    const storednome = localStorage.getItem('nome');// Obtém o nome de usuário do localStorage
+    if (!userId || !storedUsername || !storednome) {
       console.error('User ID ou username não encontrado.');
       alert('Usuário não autenticado. Redirecionando para o login.');
       navigate('/login'); // Redireciona para a página de login
     } else {
-      setUsername(storedUsername); // Define o nome de usuário no estado
+      setUsername(storedUsername);
+      setnome(storednome); // Define o nome de usuário no estado
     }
   }, [navigate]);
 
@@ -73,6 +76,7 @@ const handleDeleteAccount = async () => {
       // Remove o usuário do armazenamento local e redireciona para a página de login
       localStorage.removeItem('userId');
       localStorage.removeItem('username');
+      localStorage.removeItem('nome');
       navigate('/Cadastro');
   } catch (error) {
       // Verifica se o erro é uma instância de Error
@@ -169,18 +173,18 @@ const handleDeleteAccount = async () => {
         
         </div>
 
-        <div className="w-[1050px] mx-auto flex flex-col w-full max-xl:w-[55rem] max-lg:w-[37rem]">
+        <div className="w-[1050px] mx-auto flex flex-col w-full max-xl:w-[55rem] max-lg:w-[37rem] px-16">
           <div className="flex mx-auto justify-between w-full">
             <div className="flex justify-between w-full">
               <div >
               {/* FOTO DE PERFIL */}
               <div>
-                <img src={previewProfileImage} width="220" className="rounded-full mt-[-8rem]" alt="Profile" />
+                <img src={previewProfileImage} width="220" className="rounded-full mt-[-8rem] mb-4" alt="Profile" />
                 
               </div>
               
               <div className="flex items-center">
-                <h2 className="text-3xl font-semibold mr-4">Nome de usuário</h2>
+                <h2 className="text-3xl font-semibold mr-4">{nome ? nome : 'Nome do Usuário'}</h2>
                 
                   <Link to="/editar-perfil" className="cut-corner-border flex bg-black text-xl font-medium">
                       <div className="bg-[#EDECE7] hover:bg-[#F9C62E] transition duration-300 ease-in-out w-[20rem]">

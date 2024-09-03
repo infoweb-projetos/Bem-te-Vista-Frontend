@@ -32,11 +32,15 @@ const Login = () => {
       }
 
       // Supondo que o username está na resposta de login
-      const username = response.data.username; // Ajuste conforme necessário
+      const username = response.data.username;
+      const nome = response.data.nome; // Ajuste conforme necessário
 
       // Armazene o username no localStorage
       if (username) {
         localStorage.setItem('username', username);
+      }
+      if (nome) {
+        localStorage.setItem('nome', nome);
       }
 
       // Redireciona para a página de escolha de estilo com o nome de usuário
