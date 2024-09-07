@@ -235,9 +235,17 @@ const handleDeleteAccount = async () => {
                 <ul className="flex text-lg mt-2">
   {estilos.length > 0 ? (
     estilos.map((estilo) => (
-      <li key={estilo.estiloId} className="bg-white border border-gray-300 p-4 rounded-lg shadow">
-        {estilo.nome}
-      </li>
+      <div
+        key={estilo.estiloId} // Mova a key para o div
+        className="bg-cover w-[9rem] h-[3rem] mr-2"
+        style={{
+          backgroundImage: `url(${bordaBtv})`,
+        }}
+      >
+        <li className=" flex justify-center pr-4 pt-4">
+          {estilo.nome}
+        </li>
+      </div>
     ))
   ) : (
     <li className="text-gray-500">Carregando estilos... Ou você ainda não possui nenhum estilo.</li>
