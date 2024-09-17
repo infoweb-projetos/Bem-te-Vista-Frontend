@@ -8,7 +8,7 @@ interface User {
 
 interface Comentario {
   id: string;
-  comentario: string;
+  conteudo: string;
 }
 
 interface Post {
@@ -16,7 +16,7 @@ interface Post {
   descricao: string;
   imagem?: string;
   estilos?: string[];
-  user: User;
+  autor: User;
   comentarios: Comentario[];
 }
 
@@ -39,6 +39,11 @@ const Feed: React.FC = () => {
   const token = localStorage.getItem('token'); // Substitua com a chave correta do seu token
 
   const handleCreatePost = async () => {
+    if (!newPost.descricao.trim()) {
+      alert('A descrição é obrigatória!');
+      return;
+    }
+
     if (!token) {
       console.error('Token não encontrado. O usuário deve estar autenticado.');
       return;
@@ -47,7 +52,7 @@ const Feed: React.FC = () => {
     const formData = new FormData();
     formData.append('conteudo', newPost.descricao); // Corrija o nome do campo
     if (newPost.imagem) {
-      formData.append('imagem', newPost.imagem);
+      formData.append('imagem', newPost.imagem); // Nome do campo deve ser 'imagem'
     }
 
     try {
@@ -60,11 +65,7 @@ const Feed: React.FC = () => {
       setShowModal(false);
       fetchPostagens();
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Erro ao criar postagem:', error.response ? error.response.data : error.message);
-      } else {
-        console.error('Erro ao criar postagem:', error);
-      }
+      console.error('Erro ao criar postagem:', error);
     }
   };
 
@@ -87,10 +88,17 @@ const Feed: React.FC = () => {
       return;
     }
 
+    const formData = new FormData();
+    formData.append('conteudo', selectedPost.descricao);
+    if (selectedPost.imagem) {
+      formData.append('imagem', selectedPost.imagem); // Certifique-se de que a imagem está sendo atualizada corretamente
+    }
+
     try {
-      await axios.put(`${baseUrl}/${selectedPost.id}`, selectedPost, {
+      await axios.put(`${baseUrl}/${selectedPost.id}`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       });
       setPostagens(prevPosts =>
@@ -98,12 +106,7 @@ const Feed: React.FC = () => {
       );
       setSelectedPost(null);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Erro ao salvar a postagem:', error.response ? error.response.data : error.message);
-      } else {
-        console.error('Erro ao salvar a postagem:', error);
-      }
-      alert('Não foi possível salvar a postagem.');
+      console.error('Erro ao salvar a postagem:', error);
     }
   };
 
@@ -132,11 +135,21 @@ const Feed: React.FC = () => {
     }
 
     try {
-      await axios.post(`${baseUrl}/${postId}/comentarios`, { comentario: comentarios[postId] }, {
+      const userId = localStorage.getItem('userId'); // Certifique-se de que o userId está salvo no localStorage
+      if (!userId) {
+        console.error('ID do usuário não encontrado.');
+        console.log('User ID:', userId);
+        return;
+      }
+
+      const comentarioData = { conteudo: comentarios[postId] };
+
+      await axios.post(`${baseUrl}/${postId}/comentarios`, comentarioData, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
+
       setComentarios(prev => ({ ...prev, [postId]: '' }));
       fetchPostagens();
     } catch (error) {
@@ -170,7 +183,7 @@ const Feed: React.FC = () => {
             type="file"
             onChange={(e) => setNewPost({ ...newPost, imagem: e.target.files ? e.target.files[0] : null })}
           />
-          
+
           <button onClick={handleCreatePost}>Publicar</button>
           <button onClick={closeModal}>Fechar</button>
         </div>
@@ -181,10 +194,15 @@ const Feed: React.FC = () => {
         <div key={post.id} className="post">
           <h2>{post.descricao}</h2>
           <div>
-            <span className="user-name" onClick={() => window.location.href = `/perfil/${post.user.id}`}>
-              {post.user.nome}
+            <span className="user-name" onClick={() => window.location.href = `/${post.autor.id}/MeuPerfil`}>
+              {post.autor?.nome || 'Usuário anônimo'}
             </span>
-            {post.imagem && <img src={`http://localhost:3000/${post.imagem}`} alt="Postagem" />}
+            {post.imagem && (
+              <>
+                {console.log(`Imagem carregando: http://localhost:3000/uploads/${post.imagem}`)}
+                <img src={`http://localhost:3000/uploads/${post.imagem}`} alt="Postagem" style={{ maxWidth: '100%', height: 'auto' }} />
+              </>
+            )}
           </div>
           <div>
             <button onClick={() => handleDeletePost(post.id)}>Deletar</button>
@@ -194,9 +212,13 @@ const Feed: React.FC = () => {
           {/* Listagem de comentários */}
           <div>
             <h3>Comentários</h3>
-            {post.comentarios.map((comentario: Comentario) => (
-              <p key={comentario.id}>{comentario.comentario}</p>
-            ))}
+            {post.comentarios?.length > 0 ? (
+              post.comentarios.map((comentario: Comentario) => (
+                <p key={comentario.id}>{comentario.conteudo}</p>
+              ))
+            ) : (
+              <p>Sem comentários.</p>
+            )}
             <input
               type="text"
               placeholder="Comentar"
