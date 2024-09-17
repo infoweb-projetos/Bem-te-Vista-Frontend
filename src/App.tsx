@@ -5,6 +5,7 @@ import Login from './componentes/Login/Login';
 import StyleSelection from './componentes/EscolherEstilo/EscolherEstilo';
 import AuthRoute from './AuthRoute';
 import MeuPerfil from './componentes/MeuPerfil/MeuPerfil';
+import Feed from './componentes/Feed/Feed';
 
 const App: React.FC = () => {
   return (
@@ -19,6 +20,9 @@ const App: React.FC = () => {
         <Route 
           path="/:username/MeuPerfil"
           element={<AuthRoute element={<MeuPerfil />} />} 
+        />
+        <Route
+           path="/:username/Feed" element={<Feed />}
         />
       </Routes>
     </Router>

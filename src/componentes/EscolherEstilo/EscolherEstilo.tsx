@@ -93,7 +93,7 @@ const StyleSelection: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      navigate(`/${username}/MeuPerfil`); // Navega para a página com o username
+      navigate(`/${username}/Feed`); // Navega para a página com o username
     
     } catch (error) {
       console.error('Erro ao atualizar estilos:', error);
