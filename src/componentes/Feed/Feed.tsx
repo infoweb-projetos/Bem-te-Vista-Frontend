@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
 
 interface User {
@@ -13,8 +13,8 @@ interface Comentario {
 
 interface Post {
   id: string;
-  descricao: string;
-  imagem?: string;
+  conteudo: string; // Mudado de 'descricao' para 'conteudo'
+  foto?: string; // Mantido como 'foto'
   estilos?: string[];
   autor: User;
   comentarios: Comentario[];
@@ -24,9 +24,9 @@ const Feed: React.FC = () => {
   const [postagens, setPostagens] = useState<Post[]>([]);
   const [comentarios, setComentarios] = useState<{ [key: string]: string }>({});
   const [showModal, setShowModal] = useState(false);
-  const [newPost, setNewPost] = useState<{ descricao: string; imagem: File | null; estilos: string[] }>({
-    descricao: '',
-    imagem: null,
+  const [newPost, setNewPost] = useState<{ conteudo: string; foto: File | null; estilos: string[] }>({ // Mudado de 'descricao' para 'conteudo'
+    conteudo: '',
+    foto: null,
     estilos: [],
   });
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -36,11 +36,11 @@ const Feed: React.FC = () => {
   }, []);
 
   const baseUrl = 'http://localhost:3000/postagens';
-  const token = localStorage.getItem('token'); // Substitua com a chave correta do seu token
+  const token = localStorage.getItem('token');
 
   const handleCreatePost = async () => {
-    if (!newPost.descricao.trim()) {
-      alert('A descrição é obrigatória!');
+    if (!newPost.conteudo.trim()) { // Alterado de 'descricao' para 'conteudo'
+      alert('A descrição é obrigatória!'); // Mensagem alterada
       return;
     }
 
@@ -50,9 +50,9 @@ const Feed: React.FC = () => {
     }
 
     const formData = new FormData();
-    formData.append('conteudo', newPost.descricao); // Corrija o nome do campo
-    if (newPost.imagem) {
-      formData.append('imagem', newPost.imagem); // Nome do campo deve ser 'imagem'
+    formData.append('conteudo', newPost.conteudo); // Mudado de 'descricao' para 'conteudo'
+    if (newPost.foto) {
+      formData.append('foto', newPost.foto); // Nome do campo deve ser 'foto'
     }
 
     try {
@@ -64,16 +64,20 @@ const Feed: React.FC = () => {
       });
       setShowModal(false);
       fetchPostagens();
-    } catch (error) {
-      console.error('Erro ao criar postagem:', error);
+    } catch (error: unknown) { // Aqui usamos 'unknown'
+      if (axios.isAxiosError(error)) { // Verificação de tipo
+        console.error('Erro ao criar postagem:', error.response?.data || error.message);
+      } else {
+        console.error('Erro inesperado ao criar postagem:', error); // Captura de outros tipos de erro
     }
+  }
   };
 
   const fetchPostagens = async () => {
     try {
       const response = await axios.get(baseUrl, {
         headers: {
-          'Authorization': `Bearer ${token}`, // Adicione o token ao header da requisição
+          'Authorization': `Bearer ${token}`,
         },
       });
       setPostagens(response.data);
@@ -89,9 +93,9 @@ const Feed: React.FC = () => {
     }
 
     const formData = new FormData();
-    formData.append('conteudo', selectedPost.descricao);
-    if (selectedPost.imagem) {
-      formData.append('imagem', selectedPost.imagem); // Certifique-se de que a imagem está sendo atualizada corretamente
+    formData.append('conteudo', selectedPost.conteudo); // Mudado de 'descricao' para 'conteudo'
+    if (selectedPost.foto) {
+      formData.append('foto', selectedPost.foto);
     }
 
     try {
@@ -105,9 +109,13 @@ const Feed: React.FC = () => {
         prevPosts.map(post => (post.id === selectedPost.id ? selectedPost : post))
       );
       setSelectedPost(null);
-    } catch (error) {
-      console.error('Erro ao salvar a postagem:', error);
+    } catch (error: unknown) { // Aqui usamos 'unknown'
+      if (axios.isAxiosError(error)) { // Verificação de tipo
+        console.error('Erro ao criar postagem:', error.response?.data || error.message);
+      } else {
+        console.error('Erro inesperado ao criar postagem:', error); // Captura de outros tipos de erro
     }
+  }
   };
 
   const handleDeletePost = async (postId: string) => {
@@ -135,10 +143,9 @@ const Feed: React.FC = () => {
     }
 
     try {
-      const userId = localStorage.getItem('userId'); // Certifique-se de que o userId está salvo no localStorage
+      const userId = localStorage.getItem('userId');
       if (!userId) {
         console.error('ID do usuário não encontrado.');
-        console.log('User ID:', userId);
         return;
       }
 
@@ -176,12 +183,12 @@ const Feed: React.FC = () => {
           <h2>Criar Postagem</h2>
           <textarea
             placeholder="Escreva sua descrição"
-            value={newPost.descricao}
-            onChange={(e) => setNewPost({ ...newPost, descricao: e.target.value })}
+            value={newPost.conteudo} // Mudado de 'descricao' para 'conteudo'
+            onChange={(e) => setNewPost({ ...newPost, conteudo: e.target.value })} // Mudado de 'descricao' para 'conteudo'
           />
           <input
             type="file"
-            onChange={(e) => setNewPost({ ...newPost, imagem: e.target.files ? e.target.files[0] : null })}
+            onChange={(e) => setNewPost({ ...newPost, foto: e.target.files ? e.target.files[0] : null })}
           />
 
           <button onClick={handleCreatePost}>Publicar</button>
@@ -192,15 +199,18 @@ const Feed: React.FC = () => {
       {/* Listagem de postagens */}
       {postagens.map((post: Post) => (
         <div key={post.id} className="post">
-          <h2>{post.descricao}</h2>
+          <h2>{post.conteudo}</h2> {/* Mudado de 'descricao' para 'conteudo' */}
           <div>
-            <span className="user-name" onClick={() => window.location.href = `/${post.autor.id}/MeuPerfil`}>
+            <span
+              className="user-name"
+              onClick={() => window.location.href = `/${post.autor.nome}/MeuPerfil`}
+            >
               {post.autor?.nome || 'Usuário anônimo'}
             </span>
-            {post.imagem && (
+            {post.foto && (
               <>
-                {console.log(`Imagem carregando: http://localhost:3000/uploads/${post.imagem}`)}
-                <img src={`http://localhost:3000/uploads/${post.imagem}`} alt="Postagem" style={{ maxWidth: '100%', height: 'auto' }} />
+                {console.log(`Imagem carregando: http://localhost:3000/uploads/${post.foto}`)}
+                <img src={`http://localhost:3000/uploads/${post.foto}`} alt="Postagem" style={{ maxWidth: '100%', height: 'auto' }} />
               </>
             )}
           </div>
@@ -235,8 +245,8 @@ const Feed: React.FC = () => {
         <div className="modal">
           <h2>Editar Postagem</h2>
           <textarea
-            value={selectedPost.descricao}
-            onChange={(e) => setSelectedPost({ ...selectedPost, descricao: e.target.value })}
+            value={selectedPost.conteudo} // Mudado de 'descricao' para 'conteudo'
+            onChange={(e) => setSelectedPost({ ...selectedPost, conteudo: e.target.value })} // Mudado de 'descricao' para 'conteudo'
           />
           <button onClick={handleSave}>Salvar</button>
           <button onClick={() => setSelectedPost(null)}>Fechar</button>

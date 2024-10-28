@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import logo from '../../imagens/logo.svg';
 import searchIcon from '../../imagens/Icons/search-icon.svg';
 import gradeIcon from '../../imagens/Icons/grid-icon.svg';
@@ -19,34 +19,37 @@ import bordaBtv from '../../imagens/borda-btv.svg';
 import axios from 'axios'; 
 
 const MeuPerfil: React.FC = () => {
+  const { username } = useParams<{ username: string }>(); // Extrai o parâmetro da URL
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [username, setUsername] = useState<string | null>(null);
-  const [nome, setnome] = useState<string | null>(null);
-  //const [estilos, setEstilos] = useState<string[]>([]);
+  const [nome, setNome] = useState<string | null>(null);
+  const [estilos, setEstilos] = useState<{ estiloId: string; nome: string }[]>([]);
   const navigate = useNavigate();
 
-  const [estilos, setEstilos] = useState<{ estiloId: string; nome: string }[]>([]);
-
-
   useEffect(() => {
-    const userId = localStorage.getItem('userId');
-    const storedUsername = localStorage.getItem('username'); 
-    const storednome = localStorage.getItem('nome');
-    if (!userId || !storedUsername || !storednome) {
-      console.error('User ID ou username não encontrado.');
-      alert('Usuário não autenticado. Redirecionando para o login.');
-      navigate('/login'); // Redireciona para a página de login
-    } else {
-      setUsername(storedUsername);
-      setnome(storednome); // Define o nome de usuário no estado
-      fetchEstilos(userId);
+    if (!username) {
+      console.error('Nome de usuário não fornecido.');
+      navigate('/login');
+      return;
     }
-  }, [navigate]);
 
-    const fetchEstilos = async (userId: string) => {
+    const fetchPerfilData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/users/profile/${username}`);
+        setNome(response.data.nome);
+        fetchEstilos(response.data.id);
+      } catch (error) {
+        console.error('Erro ao buscar dados do perfil:', error);
+        navigate('/login');
+      }
+    };
+
+    fetchPerfilData();
+  }, [username, navigate]);
+
+    const fetchEstilos = async (username: string) => {
         try {
-          const response = await axios.get(`http://localhost:3000/users/${userId}/styles`);
+          const response = await axios.get(`http://localhost:3000/users/profile/${username}`);
           console.log('Estilos recebidos:', response.data);
           setEstilos(response.data); // Atualiza o estado com os estilos do usuário
         } catch (error) {
