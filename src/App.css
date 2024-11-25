@@ -1,39 +1,42 @@
-@import url('https://fonts.googleapis.com');
-@import url('https://fonts.gstatic.com');
-@import url('https://fonts.googleapis.com/css2?family=Martel+Sans:wght@200;300;400;600;700;800;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rufina:wght@400;700&display=swap');
-
-input:focus, textarea:focus {
-  outline: none;
+input:focus, textarea:focus, select:focus {
+  outline: none
 }
+
+/* Código pra cortar esquina do botão */
 
 .cut-corner{
   overflow: hidden;
   clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0% 50%);
 }
 
-/* Código pra cortar esquina do botão (incompleto) */
+/* Código pra cortar esquina do botão com direito a borda!! */
 .cut-corner-border{
   display: flex;
   justify-content: center;
   align-items: end;
   background-color: black;
-  width: 148px; /* container height - (border thickness * 2) */
-  height: 40px;
-  padding-bottom: 2px;
-overflow: hidden;
-clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0% 50%);
+  /* Largura da borda */
+  padding: 2px; 
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0% 50%);
 }
 .cut-corner-border div{
-  width: 144px; /* container height - (border thickness * 2) */
-  height: 36px; /* container height - (border thickness * 2) */
   clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0% 50%);
 }
 
-.stroke-text {
+/* Borda custom com bem te vi */
+.estilo{
+  border-image: url(imagens/borda-btv.svg) 20% round;
+  border-width: 18px;
+}
+
+/* Texto com borda */
+.stroke-text{
   text-shadow: 2px 0 #000000, -2px 0 #000000, 0 2px #000000, 0 -2px #000000,
              1px 1px #000000, -1px -1px #000000, 1px -1px #000000, -1px 1px #000000;
 }
 
+/* Código pra pág escolher estilo */
 input[type="checkbox"][id^="checkbox"] {
   display: none;
 }
@@ -42,16 +45,16 @@ label {
   transition-duration: 0.2s;
 }
 
-input[type="checkbox"]:checked + .label-estilo:before {
+:checked + .label-estilo:before {
   transform: scale(2);
 }
 
-input[type="checkbox"]:checked + .label-estilo {
-  transform: scale(0.86);
+:checked + .label-estilo {
+  transform: scale(0.87);
   border: 1px solid #F9C62E;
 }
 
-input[type="checkbox"]:checked + label img {
+:checked + label img{
   display: block;
 }
 
@@ -70,3 +73,27 @@ input[type="checkbox"]:checked + label img {
   width: 10px;
 }
 
+.dashed-border{
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+}
+
+.borda-btv{
+  background-image: url("imagens/borda-btv.svg");
+}
+
+.borda-btv2{
+  background-image: url("imagens/estilo-border.svg");
+}
+
+.centralizado-fixed{
+  transform: translate(-40%);
+}
+
+/* [id^=modal] {
+  display: none;
+  position: fixed;
+
+}
+[id^=modal]:target {
+  display: block;
+} */

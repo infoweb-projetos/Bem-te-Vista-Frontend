@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
+import '../../App.css'; 
 import logo from '../../imagens/logo.svg';
 import searchIcon from '../../imagens/Icons/search-icon.svg';
 import gradeIcon from '../../imagens/Icons/grid-icon.svg';
@@ -22,6 +23,7 @@ import previewProfileImage from '../../imagens/fotoPerfilGenerico.png';
 import agulhaFav from '../../imagens/argulha.png';
 import cabideFeed from '../../imagens/cabide-feed.svg'
 import bordaBtv from '../../imagens/borda-btv.svg';
+import bordaFeed from '../../imagens/borda-feed.svg';
 import bgforms from '../../imagens/bg-login.png';
 import axios from 'axios';
 
@@ -52,7 +54,8 @@ const Feed: React.FC = () => {
   const [postagens, setPostagens] = useState<Post[]>([]);
   const [comentarios, setComentarios] = useState<{ [key: string]: string }>({});
   const [showModal, setShowModal] = useState(false);
-  const [showPostModal, setShowPostModal] = useState(false);
+  const [showPostModal, setShowPostModal] = useState<string | null>(null);
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
   const [newPost, setNewPost] = useState<{ conteudo: string; foto: File | null; estilos: string[] }>({ // Mudado de 'descricao' para 'conteudo'
     conteudo: '',
     foto: null,
@@ -62,11 +65,24 @@ const Feed: React.FC = () => {
 
   useEffect(() => {
     fetchPostagens();
-  }, []);
+
+    const handleClickOutside = (event: MouseEvent) => {
+        const target = event.target as HTMLElement | null;
+        if (target && !target.closest(`#menu-${activeMenuId}`)) {
+            setActiveMenuId(null);
+        }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+  }, [activeMenuId]);
 
   const baseUrl = 'http://localhost:3000/postagens';
   const token = localStorage.getItem('token');
 
+
+  
   const showPreviewPost = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const files = event.target.files;
     if (files && files.length > 0) {
@@ -90,6 +106,10 @@ const Feed: React.FC = () => {
             removeButton.style.display = "block";
         }
     }
+};
+
+const toggleMenu = (postId: string): void => {
+    setActiveMenuId((prevId) => (prevId === postId ? null : postId));
 };
   
   const handleCreatePost = async () => {
@@ -226,11 +246,11 @@ const Feed: React.FC = () => {
     setShowModal(false);
   };
 
-  const openPostModal = () => {
-    setShowPostModal(true);
+  const openPostModal = (postId : string) => {
+    setShowPostModal(postId);
   }
-  const closePostModal = () => {
-    setShowPostModal(false);
+  const closePostModal = (): void => {
+    setShowPostModal(null);
   }
 
   return (
@@ -306,7 +326,7 @@ const Feed: React.FC = () => {
         </nav>
     </div>
     <span>
-        {/* <img src={bordaBtv} className="absolute h-[110vh] top-0 left-[100%]" /> */}
+        <img src={bordaFeed} className="absolute h-[110vh] top-0 left-[100%]" />
     </span>
 </div>
     {/* <!-- MAIN --> */}
@@ -330,78 +350,82 @@ const Feed: React.FC = () => {
         </div>
         {/* <!-- Modal de criar post --> */}
         {showModal && (
-        <div id="modalCriarPost" className="bg-[#EDECE7] fixed z-10 w-[35rem] mx-auto px-4 py-6 mt-24 hidden border border-black">
-        <form className="flex flex-col">
-            <div className="flex justify-between w-full">
-                <div className="flex">
-                    <a>
-                        <img src={bgforms} width="50" className="rounded-full" />
-                    </a>
-                    <input type="text" id="textoPost" placeholder="Voe no seu estilo..." className="border-none bg-transparent w-full ml-2 text-lg" value={newPost.conteudo}  onChange={(e) => setNewPost({ ...newPost, conteudo: e.target.value })} />
-                </div>
-                <button onClick={closeModal} className="mt-[-3rem]">
-                    <img src={closeIcon} width="15" />
-                </button>
-            </div>
-            {/* <div
-                    className="mt-4"
-                    id="tags-component">
-                    <!-- Tag Input -->
-                <div
-                className="w-full"
-                id="tags-input-wrapper">
-                    <!-- INPUT -->
-                    <select
-                        id="new-tag-input"
-                        className="w-full border bg-white border-black p-2 text-lg"
-                        type="text"
-                        
-                    >
-                        <option disabled selected>
-                            Escolha os seus estilos!</option>
-                        <option>
-                            Old money </option>
-                        <option>
-                            Gótico </option>
-                        <option>
-                            Alternativo </option>
-                        <option>
-                            Cosplay </option>
-                    </select>
-                    <!-- DIV COM AS TAGS -->
-                    <div
-                        className="mt-4 flex justify-start gap-[1.2rem] flex-wrap"
-                        id="tags-list">
+        <div className='mx-auto fixed'>
+            <span className="w-[100vw] h-[100vh] fixed top-0 left-0 z-1 bg-black bg-opacity-20"></span>
+            <div id="modalCriarPost" className="bg-[#EDECE7] fixed z-10 w-[35rem] centralizado-fixed mx-auto px-4 py-6 mt-24 border border-black">
+                <form className="flex flex-col">
+                    <div className="flex justify-between w-full">
+                        <div className="flex">
+                            <a>
+                                <img src={bgforms} width="50" className="rounded-full" />
+                            </a>
+                            <input type="text" id="textoPost" placeholder="Voe no seu estilo..." className="border-none bg-transparent w-full ml-2 text-lg" value={newPost.conteudo}  onChange={(e) => setNewPost({ ...newPost, conteudo: e.target.value })} />
+                        </div>
+                        <button onClick={closeModal} className="mt-[-3rem]">
+                            <img src={closeIcon} width="15" />
+                        </button>
                     </div>
-                </div>
-            </div> */}
-            <div className="dashed-border w-full h-[20rem] mt-4 flex items-center justify-center">
-                <button 
-                // onClick="unshowPreviewPost()" 
-                id="botaoRemoverPost" className="hidden absolute mt-[-20rem] mr-[-33rem] bg-white rounded-full border border-black p-1">
-                    <img src={closeIcon} width="15" />
-                </button>
-                <label id="labelPost" htmlFor="imagemPost" className="text-lg py-2 px-4 bg-[#F9C62E] border border-black hover:cursor-pointer hover:bg-[#ECB100] transition ease-in-out duration-300">
-                    <p>Selecionar do computador</p>
-                    <input type="file" id="imagemPost" className="hidden" accept="image/png, image/jpeg" onChange={(e) => setNewPost({ ...newPost, foto: e.target.files ? e.target.files[0] : null })}
-                    />
-                </label>
-                <div className="hidden w-full h-full" id="preview-post">
-                    <img className="hidden object-cover" id="file-ip-4-preview" />
-                </div>
+                    {/* <div
+                            className="mt-4"
+                            id="tags-component">
+                            <!-- Tag Input -->
+                        <div
+                        className="w-full"
+                        id="tags-input-wrapper">
+                            <!-- INPUT -->
+                            <select
+                                id="new-tag-input"
+                                className="w-full border bg-white border-black p-2 text-lg"
+                                type="text"
+                                
+                            >
+                                <option disabled selected>
+                                    Escolha os seus estilos!</option>
+                                <option>
+                                    Old money </option>
+                                <option>
+                                    Gótico </option>
+                                <option>
+                                    Alternativo </option>
+                                <option>
+                                    Cosplay </option>
+                            </select>
+                            <!-- DIV COM AS TAGS -->
+                            <div
+                                className="mt-4 flex justify-start gap-[1.2rem] flex-wrap"
+                                id="tags-list">
+                            </div>
+                        </div>
+                    </div> */}
+                    <div className="dashed-border w-full h-[20rem] mt-4 flex items-center justify-center">
+                        <button 
+                        // onClick="unshowPreviewPost()" 
+                        id="botaoRemoverPost" className="hidden absolute mt-[-20rem] mr-[-33rem] bg-white rounded-full border border-black p-1">
+                            <img src={closeIcon} width="15" />
+                        </button>
+                        <label id="labelPost" htmlFor="imagemPost" className="text-lg py-2 px-4 bg-[#F9C62E] border border-black hover:cursor-pointer hover:bg-[#ECB100] transition ease-in-out duration-300">
+                            <p>Selecionar do computador</p>
+                            <input type="file" id="imagemPost" className="hidden" accept="image/png, image/jpeg" onChange={(e) => setNewPost({ ...newPost, foto: e.target.files ? e.target.files[0] : null })}
+                            />
+                        </label>
+                        <div className="hidden w-full h-full" id="preview-post">
+                            <img className="hidden object-cover" id="file-ip-4-preview" />
+                        </div>
+                    </div>
+                    <div className="flex justify-end items-center mt-4">
+                        <a onClick={closeModal} className="text-red-500 mr-4 hover:cursor-pointer hover:underline">
+                            <p>Cancelar</p>
+                        </a>
+                        <label htmlFor="submitPost" className="cut-corner bg-black text-white flex px-4 py-2 hover:cursor-pointer" >
+                            <p className="mr-2">Publicar</p>
+                            <img src={needleIcon} />
+                            <input id="submitPost" name="submitPost" type="submit" className="hidden" />
+                        </label>
+                    </div>
+                </form>
             </div>
-            <div className="flex justify-end items-center mt-4">
-                <a onClick={closeModal} className="text-red-500 mr-4 hover:cursor-pointer hover:underline">
-                    <p>Cancelar</p>
-                </a>
-                <label htmlFor="submitPost" className="cut-corner bg-black text-white flex px-4 py-2" >
-                    <p className="mr-2">Publicar</p>
-                    <img src={needleIcon} />
-                    <input type="subtmit" className="hidden" />
-                </label>
-            </div>
-        </form>
-    </div>
+        </div>
+        
         )}
         {/* Listagem de postagens */}
       {postagens.map((post: Post) => (
@@ -409,11 +433,18 @@ const Feed: React.FC = () => {
           {/* <!-- POST --> */}
           <section className="flex flex-col w-[35rem] pt-6 min-h-[100vh]">
                 {/* <!-- Modal ver post --> */}
-                <div className="w-100 h-100 hidden" id="modal1">
+                {showPostModal === post.id && (
+                <div className="w-100 h-100" id={`modal-${post.id}`}>
                     {/* <a className="z-10 fixed block top-0 left-0 h-full w-full bg-[#000000b3]" href="#"></a> */}
-                    <div className="fixed translate-x-2/4 right-[50%] z-10 mt-10 w-[38rem] pt-4 px-4 flex flex-col bg-[#EDECE7] border border-black">
+                    <span className="w-[100vw] h-[100vh] fixed top-0 left-0 z-1 bg-black bg-opacity-20"></span>
+                    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[38rem] pt-4 px-4 flex flex-col bg-[#EDECE7] border border-black">
                         <div className="flex justify-between items-center">
-                            <img src={bgforms} className="w-[12rem] h-[12rem] object-cover border border-black shadow-lg" />
+                            {post.foto && (
+                            <>
+                                {console.log(`Imagem carregando: http://localhost:3000/uploads/${post.foto}`)}
+                                <img src={`http://localhost:3000/uploads/${post.foto}`} alt="Postagem" className="w-[12rem] h-[12rem] object-cover border border-black shadow-lg"/>
+                            </>
+                            )}
                             <div className="flex flex-col ml-4">
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center">
@@ -427,15 +458,15 @@ const Feed: React.FC = () => {
                                     </button>
                                 </div>
                                 <div className="flex">
-                                    <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[7.6rem] h-[2.5rem] mr-2">
+                                    <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
                                         {/* <!-- Por enquanto manter até ~13carac. Vou ajeitar dps   --> */}
                                         <p className="pt-[0.8rem] text-center pr-4">Old money</p>
                                     </div>
-                                    <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[7.6rem] h-[2.5rem] mr-2">
+                                    <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
                                         {/* <!-- Por enquanto manter até ~13carac. Vou ajeitar dps   --> */}
                                         <p className="pt-[0.8rem] text-center pr-4">Old money</p>
                                     </div>
-                                    <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[7.6rem] h-[2.5rem]">
+                                    <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem]">
                                         {/* <!-- Por enquanto manter até ~13carac. Vou ajeitar dps   --> */}
                                         <p className="pt-[0.8rem] text-center pr-4">Old money</p>
                                     </div>
@@ -474,7 +505,7 @@ const Feed: React.FC = () => {
                                 <input type="text" placeholder="Responda no seu estilo" className="bg-transparent" />
                             </div>
                             <div className="self-end flex items-center justify-end my-4">
-                                <a href="#" className="popup__close text-red-500 mr-6 hover:cursor-pointer">
+                                <a onClick={closePostModal} className="popup__close text-red-500 mr-6 hover:cursor-pointer">
                                     Cancelar
                                 </a>
                                 <label htmlFor="submitResposta" className="bg-black cut-corner text-white flex py-2 px-4 hover:cursor-pointer" >
@@ -486,6 +517,7 @@ const Feed: React.FC = () => {
                         </form>
                     </div>
                 </div>
+                )}
 
 
 
@@ -500,12 +532,14 @@ const Feed: React.FC = () => {
                     </div>
                     <img src={cabideFeed} width="220" className="mr-[25%]" />
                     <button 
-                    // onClick="abrirMenuPost()"
+                        onClick={() => toggleMenu(post.id)}
                     >
+                        {activeMenuId === post.id}
                         <img src={kebabMenu} width="5" id="kebab-menu" className=""/>
                     </button>
                     {/* <!-- Menu post --> */}
-                    <div id="menuPost" className="absolute hidden z-5 ml-[22rem] mt-[20rem] border border-black bg-[#EDECE7] p-4">
+                    {activeMenuId === post.id && (
+                        <div id={`menu-${post.id}`} className="absolute z-5 ml-[22rem] mt-[20rem] border border-black bg-[#EDECE7] p-4">
                         <ul>
                             <li className="mb-4">
                                 <button className="flex items-center border-none bg-transparent">
@@ -534,7 +568,7 @@ const Feed: React.FC = () => {
                             <li className="mb-4">
                                 <button className="flex items-center border-none bg-transparent">
                                     <img src={muteIcon} />
-                                    <p className="ml-2 hover:underline">Silenciar @
+                                    <p className="ml-2 hover:underline">Silenciar @{post.autor.nome}
                                       {/* {username} */}
                                       </p>
                                 </button>      
@@ -542,8 +576,7 @@ const Feed: React.FC = () => {
                             <li className="mb-4">
                                 <button className="flex items-center border-none bg-transparent">
                                     <img src={blockIcon} />
-                                    <p className="ml-2 hover:underline">Bloquear @
-                                      {/* {username} */}
+                                    <p className="ml-2 hover:underline">Bloquear @{post.autor.nome}
                                       </p>
                                 </button>      
                             </li>
@@ -555,9 +588,11 @@ const Feed: React.FC = () => {
                             </li>
                         </ul>
                     </div>
+
+                    )}
                 </div>
                 <div className=" w-[35rem] h-[35rem]">
-                    <a href="#modal1" className="hover:cursor-pointer">
+                    <a onClick={() => openPostModal(post.id)} className="hover:cursor-pointer">
                     {post.foto && (
                       <>
                         {console.log(`Imagem carregando: http://localhost:3000/uploads/${post.foto}`)}
@@ -587,15 +622,15 @@ const Feed: React.FC = () => {
                         </button>
                     </div>
                     <div className="flex justify-between items-center">
-                        <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[7.6rem] h-[2.5rem] mr-2">
+                        <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
                             {/* <!-- Por enquanto manter até ~13carac. Vou ajeitar dps   --> */}
                             <p className="pt-[0.8rem] text-center pr-4">Old money</p>
                         </div>
-                        <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[7.6rem] h-[2.5rem] mr-2">
+                        <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
                             {/* <!-- Por enquanto manter até ~13carac. Vou ajeitar dps   --> */}
                             <p className="pt-[0.8rem] text-center pr-4">Old money</p>
                         </div>
-                        <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[7.6rem] h-[2.5rem]">
+                        <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem]">
                             {/* <!-- Por enquanto manter até ~13carac. Vou ajeitar dps   --> */}
                             <p className="pt-[0.8rem] text-center pr-4">Old money</p>
                         </div>
@@ -620,27 +655,27 @@ const Feed: React.FC = () => {
                 Confira algumas ideias nos seus estilos favoritos:
             </p>
             <div className="flex justify-around flex-wrap w-full text-lg py-2">
-                <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
+                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
                     {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
                     <p className="pt-4 text-center pr-4">Old money</p>
                 </div>
-                <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
+                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
                     {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
                     <p className="pt-4 text-center pr-4">Old money</p>
                 </div>
-                <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
+                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
                     {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
                     <p className="pt-4 text-center pr-4">Old money</p>
                 </div>
-                <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
+                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
                     {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
                     <p className="pt-4 text-center pr-4">Old money</p>
                 </div>
-                <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
+                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
                     {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
                     <p className="pt-4 text-center pr-4">Old money</p>
                 </div>
-                <div className="bg-[url('imagens/borda-btv-amarela.svg')] bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
+                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
                     {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
                     <p className="pt-4 text-center pr-4">Old money</p>
                 </div>
