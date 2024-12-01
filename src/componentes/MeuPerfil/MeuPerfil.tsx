@@ -2,9 +2,7 @@ import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import logo from '../../imagens/logo.svg';
-import searchIcon from '../../imagens/Icons/search-icon.svg';
-import gradeIcon from '../../imagens/Icons/grid-icon.svg';
-import notifIcon from '../../imagens/Icons/notif-icon.svg';
+import searchIcon from '../../imagens/Icons/search-icon.svg'
 import userIcon from '../../imagens/Icons/user-icon.png';
 import gearIcon from '../../imagens/Icons/gear-icon.svg';
 import arrowDownIcon from '../../imagens/Icons/arrow-down-icon.svg';
@@ -197,7 +195,7 @@ const handleDeleteAccount = async () => {
               <div className="flex items-center">
                 <h2 className="text-3xl font-semibold mr-4">{nome ? nome : 'Nome do Usuário'}</h2>
                 
-                  <Link to="/editar-perfil" className="cut-corner-border flex bg-black text-xl font-medium">
+                  <Link to={`/${username}/EditarPerfil`} className="cut-corner-border flex bg-black text-xl font-medium">
                       <div className="bg-[#EDECE7] hover:bg-[#F9C62E] transition duration-300 ease-in-out w-[10rem]">
                           <div className="w-full h-full flex items-center justify-between px-2 py-1">
                               <img src={pencilIcon} width="20" />
