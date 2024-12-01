@@ -44,7 +44,7 @@ const Login = () => {
       }
 
       // Redireciona para a página de escolha de estilo com o nome de usuário
-      navigate(`/${username}/EscolherEstilo`);
+      navigate(`/${username}/Feed`);
     } catch (error) {
       // Verifique se o erro é uma instância de AxiosError
       if (error instanceof AxiosError) {

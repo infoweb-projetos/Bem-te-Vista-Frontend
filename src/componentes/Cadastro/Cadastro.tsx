@@ -9,6 +9,7 @@ import logo from '../../imagens/logo.svg';
 import olhoAbertoIcon from '../../imagens/Icons/olho-aberto-icon.svg';
 import olhoFechadoIcon from '../../imagens/Icons/olho-fechado-icon.svg';
 import cadeadoIcon from '../../imagens/Icons/cadeado-icon.svg';
+import { AxiosError } from 'axios'; // Importe AxiosError para tratamento de erro
 
 const UserForm: React.FC = () => {
   const [nome, setName] = useState('');
@@ -24,21 +25,44 @@ const UserForm: React.FC = () => {
   };
   const navigate = useNavigate(); 
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validatePassword(senha)) {
-      api.post('/users', { nome, email, nome_de_usuario, senha })
-        .then(response => {
-          console.log('Usuário criado:', response.data);
-          navigate('/Login');
-        })
-        .catch(error => {
-          console.error('Erro ao criar usuário:', error);
-        });
-    } else {
+    setSenhaErro('');
+    const username = nome_de_usuario;
+    
+    // Validação da senha
+    if (!validatePassword(senha)) {
       setSenhaErro('Senha deve ter letras e números.');
+      return;
+    }
+  
+    console.log('Valores antes do cadastro:', { nome, email, nome_de_usuario, senha });
+  
+    try {
+      // Cadastro do usuário
+      const response = await api.post('/users', { nome, email, nome_de_usuario, senha });
+      console.log('Usuário criado:', response.data);
+      
+      // Após o cadastro, tente fazer o login
+      const loginResponse = await api.post('/auth/login', { email, senha });
+      console.log('Logged in:', loginResponse.data);
+  
+      // Supondo que o login seja bem-sucedido
+      localStorage.setItem('token', loginResponse.data.access_token);
+      localStorage.setItem('userId', loginResponse.data.userId); // Armazene o ID do usuário
+      localStorage.setItem('username', loginResponse.data.username);
+      localStorage.setItem('nome', loginResponse.data.nome);
+  
+      // Redirecionamento para a página de escolha de estilo
+      navigate(`/${loginResponse.data.username}/EscolherEstilo`);
+    } catch (error) {
+      console.error('Erro ao criar usuário ou logar:', error);
+      setSenhaErro('Erro ao criar conta ou fazer login. Tente novamente.');
     }
   };
+  
+  
 
   const togglePassword = () => {
     setSenhaVisivel(!senhaVisivel);

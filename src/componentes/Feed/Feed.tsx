@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import '../../App.css'; 
 import logo from '../../imagens/logo.svg';
 import searchIcon from '../../imagens/Icons/search-icon.svg';
-import gradeIcon from '../../imagens/Icons/grid-icon.svg';
-import notifIcon from '../../imagens/Icons/notif-icon.svg';
 import userIcon from '../../imagens/Icons/user-icon.png';
 import gearIcon from '../../imagens/Icons/gear-icon.svg';
 import arrowDownIcon from '../../imagens/Icons/arrow-down-icon.svg';
@@ -16,16 +14,13 @@ import sadIcon from '../../imagens/Icons/sad-icon.svg'
 import redflagIcon from '../../imagens/Icons/red-flag-icon.svg'
 import blockIcon from '../../imagens/Icons/block-icon.svg'
 import muteIcon from '../../imagens/Icons/mute-icon.svg'
-import pencilIcon from '../../imagens/Icons/pencil-icon.svg';
-import borderFeed from '../../imagens/borda-feed.svg';
-import previewBannerImage from '../../imagens/bannerGenerico.png';
-import previewProfileImage from '../../imagens/fotoPerfilGenerico.png';
-import agulhaFav from '../../imagens/argulha.png';
 import cabideFeed from '../../imagens/cabide-feed.svg'
 import bordaBtv from '../../imagens/borda-btv.svg';
 import bordaFeed from '../../imagens/borda-feed.svg';
 import bgforms from '../../imagens/bg-login.png';
 import axios from 'axios';
+import { Link } from "react-router-dom";
+import { useParams, useNavigate } from 'react-router-dom';
 
 interface User {
   id: string;
@@ -63,6 +58,10 @@ const Feed: React.FC = () => {
   });
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
+  const username = localStorage.getItem('username');
+  const [estilos, setEstilos] = useState<{ estiloId: string; nome: string }[]>([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetchPostagens();
 
@@ -82,6 +81,21 @@ const Feed: React.FC = () => {
   const token = localStorage.getItem('token');
 
 
+const fetchEstilos = async (userId: string) => {
+        try {
+          const response = await axios.get(`http://localhost:3000/users/${userId}/styles`);
+          console.log('Estilos recebidos:', response.data);
+          setEstilos(response.data); // Atualiza o estado com os estilos do usuário
+        } catch (error) {
+          console.error('Erro ao buscar estilos:', error);
+          alert('Não foi possível carregar os estilos.');
+        }
+      };
+
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      fetchEstilos(userId); // Chamar a função para buscar os estilos do usuário
+    }
   
   const showPreviewPost = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const files = event.target.files;
@@ -253,8 +267,62 @@ const toggleMenu = (postId: string): void => {
     setShowPostModal(null);
   }
 
+  const [showSubMenu, setShowSubMenu] = useState(false);
+  const [showModal1, setShowModal1] = useState(false);
+
+  const handleOpenModal = () => {
+    setShowModal1(true);
+    const esmaecer = document.getElementById('esmaecer');
+    if (esmaecer) esmaecer.style.display = 'block';
+  };
+
+  const handleCloseSubMenu = () =>{
+    setShowSubMenu(false);
+  }
+
+  const handleCloseModal = () => {
+    setShowModal1(false);
+    const esmaecer = document.getElementById('esmaecer');
+    if (esmaecer) esmaecer.style.display = 'none';
+  };
+  const handleLogout = () => {
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    navigate('/login');
+};
+
+const handleDeleteAccount = async () => {
+  try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+          throw new Error('Usuário não autenticado.');
+      }
+
+      console.log(userId);
+      
+      const response = await fetch(`http://localhost:3000/users/${userId}`, {
+          method: 'DELETE',
+      });
+
+      if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Erro ao excluir a conta: ${errorText}`);
+      }
+
+      // Remove o usuário do armazenamento local e redireciona para a página de login
+      localStorage.removeItem('userId');
+      localStorage.removeItem('username');
+      localStorage.removeItem('nome');
+      navigate('/Cadastro');
+  } catch (error) {
+      // Verifica se o erro é uma instância de Error
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      console.error('Erro ao excluir conta:', error);
+      alert('Ocorreu um erro ao excluir sua conta. Detalhes: ' + errorMessage);
+  }
+};
   return (
-    <div className="postagens-page">
+    <div className="postagens-page" >
       <body className="flex">
 {/* <!-- Div esmaecer pros modais --> */}
 <div id="esmaecer" className="hidden bg-[rgba(0,0,0,0.3)] absolute z-10 w-[100vw] h-[100vh]"></div>
@@ -273,51 +341,27 @@ const toggleMenu = (postId: string): void => {
                     </a>
                 </li>
                 <li className="my-2 mt-6">
-                    <a href="grade.html" className="flex items-center">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                            xmlns="http://www.w3.org/2000/svg" className="mr-2">
-                            <path
-                                d="M2.5 0C1.83696 0 1.20107 0.263392 0.732233 0.732233C0.263392 1.20107 0 1.83696 0 2.5V5.83333C0 6.49637 0.263392 7.13226 0.732233 7.6011C1.20107 8.06994 1.83696 8.33333 2.5 8.33333H5.83333C6.49637 8.33333 7.13226 8.06994 7.6011 7.6011C8.06994 7.13226 8.33333 6.49637 8.33333 5.83333V2.5C8.33333 1.83696 8.06994 1.20107 7.6011 0.732233C7.13226 0.263392 6.49637 0 5.83333 0H2.5ZM1.66667 2.5C1.66667 2.27899 1.75446 2.06702 1.91074 1.91074C2.06702 1.75446 2.27899 1.66667 2.5 1.66667H5.83333C6.05435 1.66667 6.26631 1.75446 6.42259 1.91074C6.57887 2.06702 6.66667 2.27899 6.66667 2.5V5.83333C6.66667 6.05435 6.57887 6.26631 6.42259 6.42259C6.26631 6.57887 6.05435 6.66667 5.83333 6.66667H2.5C2.27899 6.66667 2.06702 6.57887 1.91074 6.42259C1.75446 6.26631 1.66667 6.05435 1.66667 5.83333V2.5ZM14.1667 0C13.5036 0 12.8677 0.263392 12.3989 0.732233C11.9301 1.20107 11.6667 1.83696 11.6667 2.5V5.83333C11.6667 6.49637 11.9301 7.13226 12.3989 7.6011C12.8677 8.06994 13.5036 8.33333 14.1667 8.33333H17.5C18.163 8.33333 18.7989 8.06994 19.2678 7.6011C19.7366 7.13226 20 6.49637 20 5.83333V2.5C20 1.83696 19.7366 1.20107 19.2678 0.732233C18.7989 0.263392 18.163 0 17.5 0H14.1667ZM13.3333 2.5C13.3333 2.27899 13.4211 2.06702 13.5774 1.91074C13.7337 1.75446 13.9457 1.66667 14.1667 1.66667H17.5C17.721 1.66667 17.933 1.75446 18.0893 1.91074C18.2455 2.06702 18.3333 2.27899 18.3333 2.5V5.83333C18.3333 6.05435 18.2455 6.26631 18.0893 6.42259C17.933 6.57887 17.721 6.66667 17.5 6.66667H14.1667C13.9457 6.66667 13.7337 6.57887 13.5774 6.42259C13.4211 6.26631 13.3333 6.05435 13.3333 5.83333V2.5ZM0 14.1667C0 13.5036 0.263392 12.8677 0.732233 12.3989C1.20107 11.9301 1.83696 11.6667 2.5 11.6667H5.83333C6.49637 11.6667 7.13226 11.9301 7.6011 12.3989C8.06994 12.8677 8.33333 13.5036 8.33333 14.1667V17.5C8.33333 18.163 8.06994 18.7989 7.6011 19.2678C7.13226 19.7366 6.49637 20 5.83333 20H2.5C1.83696 20 1.20107 19.7366 0.732233 19.2678C0.263392 18.7989 0 18.163 0 17.5V14.1667ZM2.5 13.3333C2.27899 13.3333 2.06702 13.4211 1.91074 13.5774C1.75446 13.7337 1.66667 13.9457 1.66667 14.1667V17.5C1.66667 17.721 1.75446 17.933 1.91074 18.0893C2.06702 18.2455 2.27899 18.3333 2.5 18.3333H5.83333C6.05435 18.3333 6.26631 18.2455 6.42259 18.0893C6.57887 17.933 6.66667 17.721 6.66667 17.5V14.1667C6.66667 13.9457 6.57887 13.7337 6.42259 13.5774C6.26631 13.4211 6.05435 13.3333 5.83333 13.3333H2.5ZM14.1667 11.6667C13.5036 11.6667 12.8677 11.9301 12.3989 12.3989C11.9301 12.8677 11.6667 13.5036 11.6667 14.1667V17.5C11.6667 18.163 11.9301 18.7989 12.3989 19.2678C12.8677 19.7366 13.5036 20 14.1667 20H17.5C18.163 20 18.7989 19.7366 19.2678 19.2678C19.7366 18.7989 20 18.163 20 17.5V14.1667C20 13.5036 19.7366 12.8677 19.2678 12.3989C18.7989 11.9301 18.163 11.6667 17.5 11.6667H14.1667ZM13.3333 14.1667C13.3333 13.9457 13.4211 13.7337 13.5774 13.5774C13.7337 13.4211 13.9457 13.3333 14.1667 13.3333H17.5C17.721 13.3333 17.933 13.4211 18.0893 13.5774C18.2455 13.7337 18.3333 13.9457 18.3333 14.1667V17.5C18.3333 17.721 18.2455 17.933 18.0893 18.0893C17.933 18.2455 17.721 18.3333 17.5 18.3333H14.1667C13.9457 18.3333 13.7337 18.2455 13.5774 18.0893C13.4211 17.933 13.3333 17.721 13.3333 17.5V14.1667Z"
-                                fill="black" />
-                            <path
-                                d="M2.5 0C1.83696 0 1.20107 0.263392 0.732233 0.732233C0.263392 1.20107 0 1.83696 0 2.5V5.83333C0 6.49637 0.263392 7.13226 0.732233 7.6011C1.20107 8.06994 1.83696 8.33333 2.5 8.33333H5.83333C6.49637 8.33333 7.13226 8.06994 7.6011 7.6011C8.06994 7.13226 8.33333 6.49637 8.33333 5.83333V2.5C8.33333 1.83696 8.06994 1.20107 7.6011 0.732233C7.13226 0.263392 6.49637 0 5.83333 0H2.5ZM1.66667 2.5C1.66667 2.27899 1.75446 2.06702 1.91074 1.91074C2.06702 1.75446 2.27899 1.66667 2.5 1.66667H5.83333C6.05435 1.66667 6.26631 1.75446 6.42259 1.91074C6.57887 2.06702 6.66667 2.27899 6.66667 2.5V5.83333C6.66667 6.05435 6.57887 6.26631 6.42259 6.42259C6.26631 6.57887 6.05435 6.66667 5.83333 6.66667H2.5C2.27899 6.66667 2.06702 6.57887 1.91074 6.42259C1.75446 6.26631 1.66667 6.05435 1.66667 5.83333V2.5ZM14.1667 0C13.5036 0 12.8677 0.263392 12.3989 0.732233C11.9301 1.20107 11.6667 1.83696 11.6667 2.5V5.83333C11.6667 6.49637 11.9301 7.13226 12.3989 7.6011C12.8677 8.06994 13.5036 8.33333 14.1667 8.33333H17.5C18.163 8.33333 18.7989 8.06994 19.2678 7.6011C19.7366 7.13226 20 6.49637 20 5.83333V2.5C20 1.83696 19.7366 1.20107 19.2678 0.732233C18.7989 0.263392 18.163 0 17.5 0H14.1667ZM13.3333 2.5C13.3333 2.27899 13.4211 2.06702 13.5774 1.91074C13.7337 1.75446 13.9457 1.66667 14.1667 1.66667H17.5C17.721 1.66667 17.933 1.75446 18.0893 1.91074C18.2455 2.06702 18.3333 2.27899 18.3333 2.5V5.83333C18.3333 6.05435 18.2455 6.26631 18.0893 6.42259C17.933 6.57887 17.721 6.66667 17.5 6.66667H14.1667C13.9457 6.66667 13.7337 6.57887 13.5774 6.42259C13.4211 6.26631 13.3333 6.05435 13.3333 5.83333V2.5ZM0 14.1667C0 13.5036 0.263392 12.8677 0.732233 12.3989C1.20107 11.9301 1.83696 11.6667 2.5 11.6667H5.83333C6.49637 11.6667 7.13226 11.9301 7.6011 12.3989C8.06994 12.8677 8.33333 13.5036 8.33333 14.1667V17.5C8.33333 18.163 8.06994 18.7989 7.6011 19.2678C7.13226 19.7366 6.49637 20 5.83333 20H2.5C1.83696 20 1.20107 19.7366 0.732233 19.2678C0.263392 18.7989 0 18.163 0 17.5V14.1667ZM2.5 13.3333C2.27899 13.3333 2.06702 13.4211 1.91074 13.5774C1.75446 13.7337 1.66667 13.9457 1.66667 14.1667V17.5C1.66667 17.721 1.75446 17.933 1.91074 18.0893C2.06702 18.2455 2.27899 18.3333 2.5 18.3333H5.83333C6.05435 18.3333 6.26631 18.2455 6.42259 18.0893C6.57887 17.933 6.66667 17.721 6.66667 17.5V14.1667C6.66667 13.9457 6.57887 13.7337 6.42259 13.5774C6.26631 13.4211 6.05435 13.3333 5.83333 13.3333H2.5ZM14.1667 11.6667C13.5036 11.6667 12.8677 11.9301 12.3989 12.3989C11.9301 12.8677 11.6667 13.5036 11.6667 14.1667V17.5C11.6667 18.163 11.9301 18.7989 12.3989 19.2678C12.8677 19.7366 13.5036 20 14.1667 20H17.5C18.163 20 18.7989 19.7366 19.2678 19.2678C19.7366 18.7989 20 18.163 20 17.5V14.1667C20 13.5036 19.7366 12.8677 19.2678 12.3989C18.7989 11.9301 18.163 11.6667 17.5 11.6667H14.1667ZM13.3333 14.1667C13.3333 13.9457 13.4211 13.7337 13.5774 13.5774C13.7337 13.4211 13.9457 13.3333 14.1667 13.3333H17.5C17.721 13.3333 17.933 13.4211 18.0893 13.5774C18.2455 13.7337 18.3333 13.9457 18.3333 14.1667V17.5C18.3333 17.721 18.2455 17.933 18.0893 18.0893C17.933 18.2455 17.721 18.3333 17.5 18.3333H14.1667C13.9457 18.3333 13.7337 18.2455 13.5774 18.0893C13.4211 17.933 13.3333 17.721 13.3333 17.5V14.1667Z"
-                                stroke="black" />
-                        </svg>
-                        <p className="max-md:hidden hover:underline">Grade</p>
-                    </a>
-                </li>
-                <li className="my-2 mt-6">
-                    <button 
-                    // onClick="abrirMenuNotif()" 
-                    className="flex items-center">
-                        <img src={notifIcon} width="20" className="mr-2" />
-                        <p className="max-md:hidden hover:underline">Notificações</p>
-                    </button>
-                </li>
-                <li className="my-2 mt-6">
-                    <a href="meu-perfil.html" className="flex items-center">
-                        <img src={userIcon} width="20" className="mr-2" />
-                        <p className="max-md:hidden hover:underline">Meu Perfil</p>
-                    </a>
-                </li>
-                <li className="my-2 mt-6 flex">
-                    <a href="configuracoes.html" className="flex items-center">
-                        <img src={gearIcon} width="20" className="mr-2" />
-                        <p className="max-md:hidden hover:underline mr-2">Configurações</p>
-                    </a>
-                    <button 
-                    // onClick="abrirSubMenu()"
-                    >
-                        <img src={arrowDownIcon} width="15" className="pt-2"/>
-                    </button>
-                </li>
-                {/* <!-- Submenu de Configurações --> */}
-                <div id="subMenuConfig" className="flex absolute z-10 text-lg ml-[12rem] w-[10rem] bg-[#EDECE7] border border-black  flex-col p-4 hidden text-red-500 ">
-                    <a href="index.html" className="hover:underline">Sair</a>
-                    <a 
-                    // onClick="abrirModalExcluir()" 
-                    className="hover:underline cursor-pointer">Excluir a conta</a>
+    <Link to={`/${username}/MeuPerfil`} className="flex items-center">
+        <img src={userIcon} width="20" className="mr-2" />
+        <p className="max-md:hidden hover:underline">Meu Perfil</p>
+    </Link>
+</li>
+<li className="my-2 mt-6 flex">
+                <button onClick={() => setShowSubMenu(!showSubMenu)} className='flex items-center'>
+                <Link to="" className="flex items-center">
+                  <img src={gearIcon} width="20" className="mr-2" alt="Settings" />
+                  <p className="max-md:hidden hover:underline mr-2">Configurações</p>
+                </Link>
+                  <img src={arrowDownIcon} width="15" className="pt-2" alt="Arrow Down" />
+                </button>
+              </li>
+              {/* Submenu de Configurações */}
+              {showSubMenu && (
+                <div id="subMenuConfig" className="hover:cursor-pointer flex absolute z-10 text-lg ml-[12rem] w-[10rem] bg-[#EDECE7] border border-black flex-col p-4 text-red-500">
+                  <p onClick={handleLogout} className="hover:underline">Sair</p>
+                  <button onClick={handleOpenModal} className="hover:underline cursor-pointer text-left">Excluir a conta</button>              
                 </div>
+              )}
             </ul>
             <button onClick={openModal} className="flex justify-around items-center bg-black text-white px-4 py-3 mt-10 text-xl cut-corner">
                 <p className="pr-2">Publicar</p>
@@ -331,23 +375,20 @@ const toggleMenu = (postId: string): void => {
 </div>
     {/* <!-- MAIN --> */}
     <main className="bg-[#EDECE7] w-[50%] ml-[20%] flex flex-col items-center">
-        {/* <!-- Modal de excluir usuário --> */}
-        <div id="modalExcluir" className="absolute z-10 w-[26rem] mx-auto left-0 right-0 mt-24 hidden py-2 px-10 bg-[#EDECE7] border border-black text-center">
-            <button 
-            // onClick="fecharModalExcluir()" 
-            className="bg-none absolute ml-[11rem] mb-[5rem]">
-                <img src={closeIcon} width="15" />
+     {/* Modal de excluir usuário */}
+     {showModal1 && (
+          <div id="modalExcluir" className="absolute z-10 w-[26rem] mx-auto left-0 right-0 mt-24 py-2 px-10 bg-[#EDECE7] border border-black text-center">
+            <button onClick={handleCloseModal} className="bg-none absolute ml-[11rem] mb-[5rem]">
+              <img src={closeIcon} width="15" alt="Close Modal" />
             </button>
             <h3 className="text-2xl font-bold mt-8">Está de saída? :(</h3>
             <p className="text-lg w-full pt-2">Ao deletar sua conta, seus dados serão excluídos permanentemente. Tem certeza?</p>
             <div className="flex justify-around pt-6 mb-8">
-                <button className="p-2 border border-[#8AA66D] hover:bg-[#8AA66D] hover:text-white transition duration-300 ease-in-out" 
-                // onClick="fecharModalExcluir()"
-                >Cancelo..</button>
-                {/* <!-- Excluir usuário --> */}
-                <button className="p-2 border border-[#FF441B] hover:bg-[#FF441B] hover:text-white transition duration-300 ease-in-out">Vai na paz irmão</button>
+              <button className="p-2 border border-[#8AA66D] hover:bg-[#8AA66D] hover:text-white transition duration-300 ease-in-out" onClick={handleCloseModal}>Cancelo..</button>
+              <button onClick={handleDeleteAccount} className="p-2 border border-[#FF441B] hover:bg-[#FF441B] hover:text-white transition duration-300 ease-in-out">Vai na paz irmão</button>
             </div>
-        </div>
+          </div>
+        )}
         {/* <!-- Modal de criar post --> */}
         {showModal && (
         <div className='mx-auto fixed'>
@@ -654,33 +695,25 @@ const toggleMenu = (postId: string): void => {
             <p>
                 Confira algumas ideias nos seus estilos favoritos:
             </p>
-            <div className="flex justify-around flex-wrap w-full text-lg py-2">
-                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
-                    {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
-                    <p className="pt-4 text-center pr-4">Old money</p>
-                </div>
-                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
-                    {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
-                    <p className="pt-4 text-center pr-4">Old money</p>
-                </div>
-                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
-                    {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
-                    <p className="pt-4 text-center pr-4">Old money</p>
-                </div>
-                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
-                    {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
-                    <p className="pt-4 text-center pr-4">Old money</p>
-                </div>
-                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
-                    {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
-                    <p className="pt-4 text-center pr-4">Old money</p>
-                </div>
-                <div className="borda-btv2 bg-cover w-[9.3rem] h-[3rem] mr-2 mb-4 hover:cursor-pointer">
-                    {/* <!-- Por enquanto manter até ~11-13carac. Vou ajeitar dps   --> */}
-                    <p className="pt-4 text-center pr-4">Old money</p>
-                </div>
-                
-            </div>
+            <ul className="flex text-lg mt-2 flex-wrap">
+  {estilos.length > 0 ? (
+    estilos.map((estilo) => (
+      <div
+        key={estilo.estiloId} // Mova a key para o div
+        className="bg-cover w-[9rem] h-[3rem] mr-2"
+        style={{
+          backgroundImage: `url(${bordaBtv})`,
+        }}
+      >
+        <li className=" flex justify-center pr-4 pt-4">
+          {estilo.nome}
+        </li>
+      </div>
+    ))
+  ) : (
+    <li className="text-gray-500">Carregando estilos... Ou você ainda não possui nenhum estilo.</li>
+  )}
+</ul>
             <button className="hover:underline">
                 ver mais +
             </button>

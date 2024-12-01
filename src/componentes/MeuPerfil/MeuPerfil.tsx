@@ -47,9 +47,9 @@ const MeuPerfil: React.FC = () => {
     fetchPerfilData();
   }, [username, navigate]);
 
-    const fetchEstilos = async (username: string) => {
+    const fetchEstilos = async (userId: string) => {
         try {
-          const response = await axios.get(`http://localhost:3000/users/profile/${username}`);
+          const response = await axios.get(`http://localhost:3000/users/${userId}/styles`);
           console.log('Estilos recebidos:', response.data);
           setEstilos(response.data); // Atualiza o estado com os estilos do usuário
         } catch (error) {
@@ -57,6 +57,7 @@ const MeuPerfil: React.FC = () => {
           alert('Não foi possível carregar os estilos.');
         }
       };
+
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -120,30 +121,20 @@ const handleDeleteAccount = async () => {
             <img src={logo} width="200" alt="Logo" />
           </Link>
           <nav className="mt-12">
-            <ul>
-              <li className="my-2 mt-2">
-                <Link to="" className="flex items-center">
-                  <img src={searchIcon} width="20" className="mr-2" alt="Pesquisa" />
-                  <p className="max-md:hidden hover:underline">Explorar</p>
-                </Link>
-              </li>
-              <li className="my-2 mt-6">
-                <Link to="" className="flex items-center">
-                  <img src={gradeIcon} width="20" className="mr-2" alt="Grade" />
-                  <p className="max-md:hidden hover:underline">Grade</p>
-                </Link>
-              </li>
-              <li className="my-2 mt-6 flex">
-                  <img src={notifIcon} width="20" className="mr-2" alt="Notificações" />
-                  <p className="max-md:hidden hover:underline">Notificações</p>
-              </li>
-              <li className="my-2 mt-6">
-                <Link to="" className="flex items-center">
-                  <img src={userIcon} width="20" className="mr-2" alt="Meu Perfil" />
-                  <p className="max-md:hidden hover:underline">Meu Perfil</p>
-                </Link>
-              </li>
-              <li className="my-2 mt-6 flex">
+          <ul className="">
+                <li className="my-2 mt-2">
+                    <a href="explorar.html" className="flex items-center">
+                        <img src={searchIcon} width="20" className="mr-2" />
+                        <p className="max-md:hidden hover:underline">Explorar</p>
+                    </a>
+                </li>
+                <li className="my-2 mt-6">
+    <Link to={`/${username}/MeuPerfil`} className="flex items-center">
+        <img src={userIcon} width="20" className="mr-2" />
+        <p className="max-md:hidden hover:underline">Meu Perfil</p>
+    </Link>
+</li>
+<li className="my-2 mt-6 flex">
                 <button onClick={() => setShowSubMenu(!showSubMenu)} className='flex items-center'>
                 <Link to="" className="flex items-center">
                   <img src={gearIcon} width="20" className="mr-2" alt="Settings" />
@@ -156,7 +147,7 @@ const handleDeleteAccount = async () => {
               {showSubMenu && (
                 <div id="subMenuConfig" className="hover:cursor-pointer flex absolute z-10 text-lg ml-[12rem] w-[10rem] bg-[#EDECE7] border border-black flex-col p-4 text-red-500">
                   <p onClick={handleLogout} className="hover:underline">Sair</p>
-                  <button onClick={handleOpenModal} className="hover:underline cursor-pointer text-left">Excluir a conta</button>
+                  <button onClick={handleOpenModal} className="hover:underline cursor-pointer text-left">Excluir a conta</button>              
                 </div>
               )}
             </ul>
@@ -207,7 +198,7 @@ const handleDeleteAccount = async () => {
                 <h2 className="text-3xl font-semibold mr-4">{nome ? nome : 'Nome do Usuário'}</h2>
                 
                   <Link to="/editar-perfil" className="cut-corner-border flex bg-black text-xl font-medium">
-                      <div className="bg-[#EDECE7] hover:bg-[#F9C62E] transition duration-300 ease-in-out w-[20rem]">
+                      <div className="bg-[#EDECE7] hover:bg-[#F9C62E] transition duration-300 ease-in-out w-[10rem]">
                           <div className="w-full h-full flex items-center justify-between px-2 py-1">
                               <img src={pencilIcon} width="20" />
                               <p>Editar perfil</p>
