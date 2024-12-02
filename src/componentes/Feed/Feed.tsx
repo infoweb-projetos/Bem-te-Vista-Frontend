@@ -440,7 +440,7 @@ const handleDeleteAccount = async () => {
                     </div> */}
                     <div className="dashed-border w-full h-[20rem] mt-4 flex items-center justify-center">
                         <button 
-                        // onClick="unshowPreviewPost()" 
+                        onClick={handleCreatePost}
                         id="botaoRemoverPost" className="hidden absolute mt-[-20rem] mr-[-33rem] bg-white rounded-full border border-black p-1">
                             <img src={closeIcon} width="15" />
                         </button>
@@ -469,97 +469,142 @@ const handleDeleteAccount = async () => {
         
         )}
         {/* Listagem de postagens */}
-      {postagens.map((post: Post) => (
+        {postagens.map((post) => (
         <div key={post.id} className="post">
-          {/* <!-- POST --> */}
+          {/* Modal para visualizar o post */}
           <section className="flex flex-col w-[35rem] pt-6 min-h-[100vh]">
-                {/* <!-- Modal ver post --> */}
-                {showPostModal === post.id && (
-                <div className="w-100 h-100" id={`modal-${post.id}`}>
-                    {/* <a className="z-10 fixed block top-0 left-0 h-full w-full bg-[#000000b3]" href="#"></a> */}
-                    <span className="w-[100vw] h-[100vh] fixed top-0 left-0 z-1 bg-black bg-opacity-20"></span>
-                    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[38rem] pt-4 px-4 flex flex-col bg-[#EDECE7] border border-black">
-                        <div className="flex justify-between items-center">
-                            {post.foto && (
-                            <>
-                                {console.log(`Imagem carregando: http://localhost:3000/uploads/${post.foto}`)}
-                                <img src={`http://localhost:3000/uploads/${post.foto}`} alt="Postagem" className="w-[12rem] h-[12rem] object-cover border border-black shadow-lg"/>
-                            </>
-                            )}
-                            <div className="flex flex-col ml-4">
-                                <div className="flex justify-between items-center">
-                                    <div className="flex items-center">
-                                        <a>
-                                            <img src={bgforms} width="30" className="rounded-full mr-2" />
-                                        </a>
-                                        <p>@{post.autor.nome}</p>
-                                    </div>
-                                    <button onClick={closePostModal} className="bg-transparent border-none">
-                                        <img src={closeIcon} width="15" />
-                                    </button>
-                                </div>
-                                <div className="flex">
-                                    <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
-                                        {/* <!-- Por enquanto manter até ~13carac. Vou ajeitar dps   --> */}
-                                        <p className="pt-[0.8rem] text-center pr-4">Old money</p>
-                                    </div>
-                                    <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
-                                        {/* <!-- Por enquanto manter até ~13carac. Vou ajeitar dps   --> */}
-                                        <p className="pt-[0.8rem] text-center pr-4">Old money</p>
-                                    </div>
-                                    <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem]">
-                                        {/* <!-- Por enquanto manter até ~13carac. Vou ajeitar dps   --> */}
-                                        <p className="pt-[0.8rem] text-center pr-4">Old money</p>
-                                    </div>
-                                </div>
-                                <p className="mt-2">
-                                    <b>{post.autor.nome}</b> {post.conteudo}
-                                </p>
-                                <div className="flex mt-4">
-                                    <button>
-                                        <svg width="24" height="22" viewBox="0 0 24 22" fill="none" className="hover:fill-[#F9C62E] mr-3" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M21.1721 11.7216L12.0102 21L2.84826 11.7216C2.24395 11.1203 1.76794 10.3976 1.45021 9.59892C1.13248 8.80027 0.979915 7.943 1.00212 7.08109C1.02432 6.21918 1.22081 5.37131 1.57922 4.59087C1.93763 3.81043 2.45019 3.11432 3.08462 2.54638C3.71905 1.97844 4.46162 1.55098 5.26555 1.2909C6.06949 1.03083 6.91738 0.943779 7.75583 1.03524C8.59429 1.12669 9.40514 1.39467 10.1373 1.82231C10.8695 2.24994 11.5072 2.82796 12.0102 3.51996C12.5153 2.83298 13.1538 2.26001 13.8854 1.83692C14.6171 1.41382 15.4263 1.14971 16.2624 1.06112C17.0985 0.972517 17.9435 1.06134 18.7445 1.32202C19.5455 1.5827 20.2853 2.00963 20.9175 2.57609C21.5497 3.14255 22.0607 3.83634 22.4186 4.61405C22.7766 5.39175 22.9736 6.23663 22.9975 7.0958C23.0214 7.95497 22.8716 8.80993 22.5575 9.60719C22.2434 10.4044 21.7718 11.1268 21.1721 11.7291" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </button>
-                                    <button>
-                                        <svg width="16" height="22" viewBox="0 0 16 22" fill="none" className="hover:fill-black" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12.25 1H3.25C2.65326 1 2.08097 1.23705 1.65901 1.65901C1.23705 2.08097 1 2.65326 1 3.25V21.25L7.75 17.875L14.5 21.25V3.25C14.5 2.65326 14.2629 2.08097 13.841 1.65901C13.419 1.23705 12.8467 1 12.25 1Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>                 
-                                    </button>
-                                </div>
-                            </div>
-                            
+            {/* Modal de post */}
+            {showPostModal === post.id && (
+              <div className="w-100 h-100" id={`modal-${post.id}`}>
+                <span className="w-[100vw] h-[100vh] fixed top-0 left-0 z-1 bg-black bg-opacity-20"></span>
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[38rem] pt-4 px-4 flex flex-col bg-[#EDECE7] border border-black">
+                  <div className="flex justify-between items-center">
+                    {post.foto && (
+                      <img
+                        src={`http://localhost:3000/uploads/${post.foto}`}
+                        alt="Postagem"
+                        className="w-[12rem] h-[12rem] object-cover border border-black shadow-lg"
+                      />
+                    )}
+                    <div className="flex flex-col ml-4">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center">
+                          <a>
+                            <img src={bgforms} width="30" className="rounded-full mr-2" />
+                          </a>
+                          <p>@{post.autor.nome}</p>
                         </div>
-                        <div className="mt-4">
-                            <ul>
-                                <li className="flex items-center mb-4">
-                                    <img src={bgforms} width="30" className="rounded-full mr-2" />
-                                    <p><b>
-                                      {/* {username de resposta} */}
-                                      </b> - Comentário</p>
-                                </li>
-                            </ul>
+                        <button onClick={closePostModal} className="bg-transparent border-none">
+                          <img src={closeIcon} width="15" />
+                        </button>
+                      </div>
+                      <div className="flex">
+                        <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
+                          <p className="pt-[0.8rem] text-center pr-4">Old money</p>
                         </div>
-                        <form>
-                            <div className="mt-8 flex">
-                                <img src={bgforms} width="30" className="rounded-full mr-2" />
-                                <input type="text" placeholder="Responda no seu estilo" className="bg-transparent" />
-                            </div>
-                            <div className="self-end flex items-center justify-end my-4">
-                                <a onClick={closePostModal} className="popup__close text-red-500 mr-6 hover:cursor-pointer">
-                                    Cancelar
-                                </a>
-                                <label htmlFor="submitResposta" className="bg-black cut-corner text-white flex py-2 px-4 hover:cursor-pointer" >
-                                    <p className="mr-2">Responder</p>
-                                    <img src={needleIcon} />
-                                </label>
-                                <input type="submit" className="hidden"/>
-                            </div>
-                        </form>
+                        <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
+                          <p className="pt-[0.8rem] text-center pr-4">Old money</p>
+                        </div>
+                        <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem]">
+                          <p className="pt-[0.8rem] text-center pr-4">Old money</p>
+                        </div>
+                      </div>
+                      <p className="mt-2">
+                        <b>{post.autor.nome}</b> {post.conteudo}
+                      </p>
+                      <div className="flex mt-4">
+                        <button>
+                          <svg
+                            width="24"
+                            height="22"
+                            viewBox="0 0 24 22"
+                            fill="none"
+                            className="hover:fill-[#F9C62E] mr-3"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M21.1721 11.7216L12.0102 21L2.84826 11.7216C2.24395 11.1203 1.76794 10.3976 1.45021 9.59892C1.13248 8.80027 0.979915 7.943 1.00212 7.08109C1.02432 6.21918 1.22081 5.37131 1.57922 4.59087C1.93763 3.81043 2.45019 3.11432 3.08462 2.54638C3.71905 1.97844 4.46162 1.55098 5.26555 1.2909C6.06949 1.03083 6.91738 0.943779 7.75583 1.03524C8.59429 1.12669 9.40514 1.39467 10.1373 1.82231C10.8695 2.24994 11.5072 2.82796 12.0102 3.51996C12.5153 2.83298 13.1538 2.26001 13.8854 1.83692C14.6171 1.41382 15.4263 1.14971 16.2624 1.06112C17.0985 0.972517 17.9435 1.06134 18.7445 1.32202C19.5455 1.5827 20.2853 2.00963 20.9175 2.57609C21.5497 3.14255 22.0607 3.83634 22.4186 4.61405C22.7766 5.39175 22.9736 6.23663 22.9975 7.0958C23.0214 7.95497 22.8716 8.80993 22.5575 9.60719C22.2434 10.4044 21.7718 11.1268 21.1721 11.7291"
+                              stroke="black"
+                              stroke-width="1.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </button>
+                        <button>
+                          <svg
+                            width="16"
+                            height="22"
+                            viewBox="0 0 16 22"
+                            fill="none"
+                            className="hover:fill-black"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12.25 1H3.25C2.65326 1 2.08097 1.23705 1.65901 1.65901C1.23705 2.08097 1 2.65326 1 3.25V21.25L7.75 17.875L14.5 21.25V3.25C14.5 2.65326 14.2629 2.08097 13.841 1.65901C13.419 1.23705 12.8467 1 12.25 1Z"
+                              stroke="black"
+                              stroke-width="1.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                </div>
-                )}
+                  </div>
 
+                  {/* Comentários no modal */}
+                  <div className="mt-4">
+                    <h3>Comentários</h3>
+                    {post.comentarios?.length > 0 ? (
+                      post.comentarios.map((comentario) => (
+                        <ul key={comentario.id}>
+                          <li className="flex items-center mb-4">
+                            <img src={bgforms} width="30" className="rounded-full mr-2" />
+                            <p>
+                              <b>{comentario.id}</b> - {comentario.conteudo}
+                            </p>
+                          </li>
+                        </ul>
+                      ))
+                    ) : (
+                      <p>Sem comentários.</p>
+                    )}
+
+                    <div className="mt-8 flex">
+                      <img src={bgforms} width="30" className="rounded-full mr-2" />
+                      <input
+                        type="text"
+                        placeholder="Comentar"
+                        className="bg-transparent"
+                        value={comentarios[post.id] || ''}
+                        onChange={(e) =>
+                          setComentarios({ ...comentarios, [post.id]: e.target.value })
+                        }
+                      />
+                    </div>
+
+                    <div className="self-end flex items-center justify-end my-4">
+                      <a
+                        onClick={closePostModal}
+                        className="popup__close text-red-500 mr-6 hover:cursor-pointer"
+                      >
+                        Cancelar
+                      </a>
+                      <button
+                        className="bg-black cut-corner text-white flex py-2 px-4 hover:cursor-pointer"
+                        onClick={() => handleAddComment(post.id)}
+                      >
+                        <p className="mr-2" >Comentar</p>
+                        <img src={needleIcon} alt="Comentar" />
+                      </button>
+                      <input type="submit" className="hidden"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          
 
 
                 <div className="flex items-center justify-between">
