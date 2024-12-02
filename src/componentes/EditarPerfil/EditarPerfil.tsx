@@ -14,16 +14,49 @@ import previewBannerImage from '../../imagens/bannerGenerico.png';
 import previewProfileImage from '../../imagens/fotoPerfilGenerico.png';
 import agulhaFav from '../../imagens/argulha.png';
 import bordaBtv from '../../imagens/borda-btv.svg';
-import axios from 'axios'; 
+import axios from 'axios';
+
+// const predefinedStyles = [
+//   'Clássico', 'Minimalista', 'Boho', 'Vintage', 'Retro', 'Punk', 'Gótico',
+//   'Grunge', 'Streetwear', 'Esportivo', 'Preppy', 'Chic', 'Roker', 'Romântico',
+//   'Eclético', 'Futurista', 'Cowboy/Western', 'Militar', 'Glam', 'Grunge Revival',
+//   'Cyberpunk', 'Safari', 'Hipster', 'Moderno', 'Casual', 'Formal', 'Artsy',
+//   'Kawaii', 'Andrógino', 'Pin-up', 'Y2K',
+// ];
 
 const predefinedStyles = [
-    'Clássico', 'Minimalista', 'Boho', 'Vintage', 'Retro', 'Punk', 'Gótico',
-    'Grunge', 'Streetwear', 'Esportivo', 'Preppy', 'Chic', 'Roker', 'Romântico',
-    'Eclético', 'Futurista', 'Cowboy/Western', 'Militar', 'Glam', 'Grunge Revival',
-    'Cyberpunk', 'Safari', 'Hipster', 'Moderno', 'Casual', 'Formal', 'Artsy',
-    'Kawaii', 'Andrógino', 'Pin-up', 'Y2K',
-  ];
-  
+  { id: 'classico', name: 'Clássico' },
+  { id: 'minimalista', name: 'Minimalista'},
+  { id: 'boho', name: 'Boho'},
+  { id: 'vintage', name: 'Vintage'},
+  { id: 'retro', name: 'Retro'},
+  { id: 'punk', name: 'Punk'},
+  { id: 'gotico', name: 'Gótico'},
+  { id: 'grunge', name: 'Grunge'},
+  { id: 'streetwear', name: 'Streetwear'},
+  { id: 'esportivo', name: 'Esportivo'},
+  { id: 'preppy', name: 'Preppy'},
+  { id: 'chic', name: 'Chic'},
+  { id: 'roker', name: 'Roker'},
+  { id: 'romantico', name: 'Romântico'},
+  { id: 'futurista', name: 'Futurista'},
+  { id: 'cowboy', name: 'Cowboy'},
+  { id: 'militar', name: 'Militar' },
+  { id: 'glam', name: 'Glam'},
+  { id: 'grunge-revival', name: 'Grunge Revival'},
+  { id: 'cyberpunk', name: 'Cyberpunk'},
+  { id: 'safari', name: 'Safari'},
+  { id: 'hipster', name: 'Hipster'},
+  { id: 'moderno', name: 'Moderno'},
+  { id: 'casual', name: 'Casual' },
+  { id: 'formal', name: 'Formal'},
+  { id: 'artsy', name: 'Artsy'},
+  { id: 'kawaii', name: 'Kawaii'},
+  { id: 'androgino', name: 'Andrógino'},
+  { id: 'pinup', name: 'Pin-up'},
+  { id: 'y2k', name: 'Y2K'}
+];
+
 
 const EditarPerfil: React.FC = () => {
   const { username } = useParams<{ username: string }>(); // Extrai o parâmetro da URL
@@ -33,6 +66,9 @@ const EditarPerfil: React.FC = () => {
   const [estilos, setEstilos] = useState<{ estiloId: string; nome: string }[]>([]);
   const navigate = useNavigate();
   const [bio, setBio] = useState<string | null>(null);
+  const [userName, setUsername] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [senha, setSenha] = useState<string | null>(null);
 
   useEffect(() => {
     if (!username) {
@@ -48,6 +84,9 @@ const EditarPerfil: React.FC = () => {
         setNome(response.data.nome);
         fetchEstilos(response.data.id);
         setBio(response.data.bio)
+        setEmail(response.data.email)
+        setUsername(response.data.nome_de_usuario)
+        setSenha(response.data.senha)
       } catch (error) {
         console.error('Erro ao buscar dados do perfil:', error);
         navigate('/login');
@@ -57,16 +96,17 @@ const EditarPerfil: React.FC = () => {
     fetchPerfilData();
   }, [username, navigate]);
 
-    const fetchEstilos = async (userId: string) => {
-        try {
-          const response = await axios.get(`http://localhost:3000/users/${userId}/styles`);
-          console.log('Estilos recebidos:', response.data);
-          setEstilos(response.data); // Atualiza o estado com os estilos do usuário
-        } catch (error) {
-          console.error('Erro ao buscar estilos:', error);
-          alert('Não foi possível carregar os estilos.');
-        }
-      };
+  const fetchEstilos = async (userId: string) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/users/${userId}/styles`);
+      const userStyles = response.data.map((estilo: { nome: string }) => estilo.nome);
+      setEstilos(response.data); // Atualiza todos os estilos do usuário
+      setSelectedStyles(userStyles); // Ajusta os estilos selecionados
+    } catch (error) {
+      console.error('Erro ao buscar estilos:', error);
+      alert('Não foi possível carregar os estilos.');
+    }
+  };
 
 
   const handleOpenModal = () => {
@@ -84,24 +124,24 @@ const EditarPerfil: React.FC = () => {
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
     navigate('/login');
-};
+  };
 
-const handleDeleteAccount = async () => {
-  try {
+  const handleDeleteAccount = async () => {
+    try {
       const userId = localStorage.getItem('userId');
       if (!userId) {
-          throw new Error('Usuário não autenticado.');
+        throw new Error('Usuário não autenticado.');
       }
 
-      console.log(userId);
-      
+      //console.log(userId);
+
       const response = await fetch(`http://localhost:3000/users/${userId}`, {
-          method: 'DELETE',
+        method: 'DELETE',
       });
 
       if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Erro ao excluir a conta: ${errorText}`);
+        const errorText = await response.text();
+        throw new Error(`Erro ao excluir a conta: ${errorText}`);
       }
 
       // Remove o usuário do armazenamento local e redireciona para a página de login
@@ -109,14 +149,14 @@ const handleDeleteAccount = async () => {
       localStorage.removeItem('username');
       localStorage.removeItem('nome');
       navigate('/Cadastro');
-  } catch (error) {
+    } catch (error) {
       // Verifica se o erro é uma instância de Error
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
       console.error('Erro ao excluir conta:', error);
       alert('Ocorreu um erro ao excluir sua conta. Detalhes: ' + errorMessage);
-  }
-};
-const [previewBanner, setPreviewBanner] = useState<string | null>(null);
+    }
+  };
+  const [previewBanner, setPreviewBanner] = useState<string | null>(null);
   const [previewProfile, setPreviewProfile] = useState<string | null>(null);
   const [previewFavLook, setPreviewFavLook] = useState<string | null>(null);
 
@@ -138,10 +178,12 @@ const [previewBanner, setPreviewBanner] = useState<string | null>(null);
       setSelectedStyles((prevStyles) => prevStyles.filter((s) => s !== style));
     } else if (selectedStyles.length < 3) {
       setSelectedStyles((prevStyles) => [...prevStyles, style]);
+    } else {
+      alert('Você pode selecionar no máximo 3 estilos.');
     }
   };
 
-  
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -158,13 +200,28 @@ const [previewBanner, setPreviewBanner] = useState<string | null>(null);
       formData.append('nome', nome || '');
       formData.append('bio', bio || '');
       formData.append('estilos', JSON.stringify(selectedStyles));
-
-      await axios.put(`http://localhost:3000/users/${userId}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      // console.log(nome)
+      // console.log(bio)
+      // console.log(userName)
+      // console.log(email)
+      // console.log(senha)
+      // console.log(formData)
+      // console.log(userId)
+      console.info(selectedStyles)
+      const usuario = {
+        nome: nome, bio: bio, nome_de_usuario: userName
+      };
+      const usuarioEstilos = {styles: selectedStyles};
+      // const estilosParaAtualizar = estilos.filter((estilo) => selectedStyles.includes(estilo.nome));
+      
+      //console.info(estilosParaAtualizar)
+      const a = await axios.patch(`http://localhost:3000/users/${userId}`, usuario);
+      const b = await axios.post(`http://localhost:3000/users/${userId}/styles`, usuarioEstilos);
+      console.log(a)
+      console.log(b)
       alert('Perfil atualizado com sucesso!');
       navigate(`/${username}/MeuPerfil`);
-      
+
     } catch (error) {
       console.error('Erro ao atualizar o perfil:', error);
       alert('Erro ao atualizar o perfil.');
@@ -185,25 +242,25 @@ const [previewBanner, setPreviewBanner] = useState<string | null>(null);
             <img src={logo} width="200" alt="Logo" />
           </Link>
           <nav className="mt-12">
-          <ul className="">
-                <li className="my-2 mt-2">
-                    <a href="explorar.html" className="flex items-center">
-                        <img src={searchIcon} width="20" className="mr-2" />
-                        <p className="max-md:hidden hover:underline">Explorar</p>
-                    </a>
-                </li>
-                <li className="my-2 mt-6">
-    <Link to={`/${username}/MeuPerfil`} className="flex items-center">
-        <img src={userIcon} width="20" className="mr-2" />
-        <p className="max-md:hidden hover:underline">Meu Perfil</p>
-    </Link>
-</li>
-<li className="my-2 mt-6 flex">
-                <button onClick={() => setShowSubMenu(!showSubMenu)} className='flex items-center'>
-                <Link to="" className="flex items-center">
-                  <img src={gearIcon} width="20" className="mr-2" alt="Settings" />
-                  <p className="max-md:hidden hover:underline mr-2">Configurações</p>
+            <ul className="">
+              <li className="my-2 mt-2">
+                <a href="explorar.html" className="flex items-center">
+                  <img src={searchIcon} width="20" className="mr-2" />
+                  <p className="max-md:hidden hover:underline">Explorar</p>
+                </a>
+              </li>
+              <li className="my-2 mt-6">
+                <Link to={`/${username}/MeuPerfil`} className="flex items-center">
+                  <img src={userIcon} width="20" className="mr-2" />
+                  <p className="max-md:hidden hover:underline">Meu Perfil</p>
                 </Link>
+              </li>
+              <li className="my-2 mt-6 flex">
+                <button onClick={() => setShowSubMenu(!showSubMenu)} className='flex items-center'>
+                  <Link to="" className="flex items-center">
+                    <img src={gearIcon} width="20" className="mr-2" alt="Settings" />
+                    <p className="max-md:hidden hover:underline mr-2">Configurações</p>
+                  </Link>
                   <img src={arrowDownIcon} width="15" className="pt-2" alt="Arrow Down" />
                 </button>
               </li>
@@ -211,7 +268,7 @@ const [previewBanner, setPreviewBanner] = useState<string | null>(null);
               {showSubMenu && (
                 <div id="subMenuConfig" className="hover:cursor-pointer flex absolute z-10 text-lg ml-[12rem] w-[10rem] bg-[#EDECE7] border border-black flex-col p-4 text-red-500">
                   <p onClick={handleLogout} className="hover:underline">Sair</p>
-                  <button onClick={handleOpenModal} className="hover:underline cursor-pointer text-left">Excluir a conta</button>              
+                  <button onClick={handleOpenModal} className="hover:underline cursor-pointer text-left">Excluir a conta</button>
                 </div>
               )}
             </ul>
@@ -243,146 +300,139 @@ const [previewBanner, setPreviewBanner] = useState<string | null>(null);
           </div>
         )}
         <form onSubmit={handleSubmit}>
-        {/* Banner */}
-        <div className="w-full h-[40vh] flex items-center justify-center" id="banner-preview">
-          {!previewBanner ? (
-            <label htmlFor="banner">
-              <img src={previewBannerImage} alt="Upload"  className="mx-auto my-auto"/>
-              <input
-                type="file"
-                accept="image/png, image/jpeg"
-                id="banner"
-                className="absolute hidden"
-                onChange={(e) => handleFileChange(e, setPreviewBanner)}
-              />
-            </label>
-          ) : (
-            <img src={previewBanner} alt="Banner Preview" className="w-full h-full object-cover" />
-          )}
-        </div>
-
-        <div className="w-[65rem] mx-auto max-xl:w-[55rem] max-lg:w-[37rem]">
-          <div className="flex justify-between">
-            {/* Profile Picture */}
-            <div className="flex flex-col items-center">
-              <div className="rounded-full mt-[-8rem] bg-[#D9D9D9] h-[220px] w-[220px] flex items-center justify-center relative">
-                {previewProfile && (
-                  <button
-                    onClick={() => setPreviewProfile(null)}
-                    className="absolute bg-white rounded-full p-1 border border-red-500 -top-2 -right-2"
-                  >
-                    <img src={closeIcon} alt="Remove" width={12} />
-                  </button>
-                )}
-                {!previewProfile ? (
-                  <label htmlFor="profile-pic" className="cursor-pointer">
-                    <img src={previewProfileImage} alt="Upload" width={80} />
-                    <input
-                      type="file"
-                      accept="image/png, image/jpeg"
-                      id="profile-pic"
-                      className="hidden"
-                      onChange={(e) => handleFileChange(e, setPreviewProfile)}
-                    />
-                  </label>
-                ) : (
-                  <img src={previewProfile} alt="Profile Preview" className="rounded-full object-cover w-full h-full" />
-                )}
-              </div>
-              <div className="flex flex-col text-xl pt-6 pb-12">
-                <label htmlFor="nome">Nome</label>
+          {/* Banner */}
+          <div className="w-full h-[40vh] flex items-center justify-center" id="banner-preview">
+            {!previewBanner ? (
+              <label htmlFor="banner">
+                <img src={previewBannerImage} alt="Upload" className="mx-auto my-auto" />
                 <input
-                  type="text"
-                  value={nome || ''}
-                  onChange={(e) => setNome(e.target.value)}
-                  placeholder="Adicione um novo nome..."
-                  className="bg-transparent p-2 border border-black mb-4 w-[30rem] text-lg"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  id="banner"
+                  className="absolute hidden"
+                  onChange={(e) => handleFileChange(e, setPreviewBanner)}
                 />
-                <label htmlFor="username">Username</label>
-                <input
-                  type="text"
-                  placeholder="Adicione um novo username..."
-                  className="bg-transparent p-2 border border-black mb-4 text-lg"
-                />
-                <label htmlFor="bio">Bio</label>
-                <textarea
-                  placeholder="Adicione uma nova bio"
-                  value={bio || ''}
-                  onChange={(e) => setBio(e.target.value)}
-                  className="bg-transparent p-2 border mb-4 border-black h-[8rem] resize-none text-lg"
-                ></textarea>
-                {/* Dropdown para seleção de estilos */}
-      <div className="relative mb-6">
-          <label className="block text-xl font-semibold mb-2">Estilos</label>
-          <div
-            className="bg-transparent p-2 border border-black mb-4 text-lg rounded p-3 cursor-pointer"
-            onClick={toggleDropdown}
-          >
-            {selectedStyles.length > 0
-              ? selectedStyles.join(', ')
-              : 'Selecione até 3 estilos'}
+              </label>
+            ) : (
+              <img src={previewBanner} alt="Banner Preview" className="w-full h-full object-cover" />
+            )}
           </div>
 
-          {isDropdownOpen && (
-            <div className="absolute z-10  border rounded shadow w-full max-h-20 overflow-y-auto text-sm">
-              {predefinedStyles.map((style) => (
-                <div
-                  key={style}
-                  className={`p-2 cursor-pointer hover:bg-gray-100 ${
-                    selectedStyles.includes(style) ? 'bg-blue-100' : ''
-                  }`}
-                  onClick={() => handleStyleSelection(style)}
-                >
-                  {style}
+          <div className="w-[65rem] mx-auto max-xl:w-[55rem] max-lg:w-[37rem]">
+            <div className="flex justify-between">
+              {/* Profile Picture */}
+              <div className="flex flex-col items-center">
+                <div className="rounded-full mt-[-8rem] bg-[#D9D9D9] h-[220px] w-[220px] flex items-center justify-center relative">
+                  {previewProfile && (
+                    <button
+                      onClick={() => setPreviewProfile(null)}
+                      className="absolute bg-white rounded-full p-1 border border-red-500 -top-2 -right-2"
+                    >
+                      <img src={closeIcon} alt="Remove" width={12} />
+                    </button>
+                  )}
+                  {!previewProfile ? (
+                    <label htmlFor="profile-pic" className="cursor-pointer">
+                      <img src={previewProfileImage} alt="Upload" width={80} />
+                      <input
+                        type="file"
+                        accept="image/png, image/jpeg"
+                        id="profile-pic"
+                        className="hidden"
+                        onChange={(e) => handleFileChange(e, setPreviewProfile)}
+                      />
+                    </label>
+                  ) : (
+                    <img src={previewProfile} alt="Profile Preview" className="rounded-full object-cover w-full h-full" />
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+                <div className="flex flex-col text-xl pt-6 pb-12">
+                  <label htmlFor="nome">Nome</label>
+                  <input
+                    type="text"
+                    value={nome || ''}
+                    onChange={(e) => setNome(e.target.value)}
+                    placeholder="Adicione um novo nome..."
+                    className="bg-transparent p-2 border border-black mb-4 w-[30rem] text-lg"
+                  />
+                  <label htmlFor="bio">Bio</label>
+                  <textarea
+                    placeholder="Adicione uma nova bio"
+                    value={bio || ''}
+                    onChange={(e) => setBio(e.target.value)}
+                    className="bg-transparent p-2 border mb-4 border-black h-[8rem] resize-none text-lg"
+                  ></textarea>
+                  {/* Dropdown para seleção de estilos */}
+                  <div className="relative mb-6">
+                    <label className="block text-xl font-semibold mb-2">Estilos</label>
+                    <div
+                      className="bg-transparent p-2 border border-black mb-4 text-lg rounded p-3 cursor-pointer"
+                      onClick={toggleDropdown}
+                    >
+                      {selectedStyles.length > 0
+                        ? selectedStyles.join(', ')
+                        : 'Selecione até 3 estilos'}
+                    </div>
 
-              </div>
-            </div>
+                    {isDropdownOpen && (
+                      <div className="absolute z-10  border rounded shadow w-full max-h-44 overflow-y-auto text-sm">
+                        {predefinedStyles.map((style) => (
+                          <div
+                            key={style.name}
+                            className={`p-2 cursor-pointer hover:bg-gray-100 ${selectedStyles.includes(style.name) ? 'bg-blue-100' : ''
+                              }`}
+                            onClick={() => handleStyleSelection(style.name)}
+                          >
+                            {style.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
-            {/* Favorite Look */}
-            <div className="flex flex-col items-center mt-[8rem]">
-              <div className="w-[350px] h-[350px] bg-[#C4C4C4] flex items-center justify-center relative">
-                {previewFavLook && (
-                  <button
-                    onClick={() => setPreviewFavLook(null)}
-                    className="absolute bg-white rounded-full p-1 border border-red-500 -top-2 -right-2"
-                  >
-                    <img src={closeIcon} alt="Remove" width={12} />
-                  </button>
-                )}
-                {!previewFavLook ? (
-                  <label htmlFor="fav-look" className="cursor-pointer">
-                    <img src={pencilIcon} alt="Upload" width={80} />
-                    <input
-                      type="file"
-                      accept="image/png, image/jpeg"
-                      id="fav-look"
-                      className="hidden"
-                      onChange={(e) => handleFileChange(e, setPreviewFavLook)}
-                    />
-                  </label>
-                ) : (
-                  <img src={previewFavLook} alt="Fav Look Preview" className="object-cover w-full h-full" />
-                )}
+                </div>
               </div>
-              <img src={agulhaFav} alt="Decoration" className="mt-[-22rem] z-10" width={400} />
-                    
-      
-              <div className="text-xl self-end mt-20">
-                <Link to={`/${username}/MeuPerfil`} className="text-[#FF441B] mr-4 hover:underline">
-                  Cancelar
-                </Link>
-                <button type="submit" className="cut-corner bg-black p-4 text-white">Salvar alterações</button>
+
+              {/* Favorite Look */}
+              <div className="flex flex-col items-center mt-[8rem]">
+                <div className="w-[350px] h-[350px] bg-[#C4C4C4] flex items-center justify-center relative">
+                  {previewFavLook && (
+                    <button
+                      onClick={() => setPreviewFavLook(null)}
+                      className="absolute bg-white rounded-full p-1 border border-red-500 -top-2 -right-2"
+                    >
+                      <img src={closeIcon} alt="Remove" width={12} />
+                    </button>
+                  )}
+                  {!previewFavLook ? (
+                    <label htmlFor="fav-look" className="cursor-pointer">
+                      <img src={pencilIcon} alt="Upload" width={80} />
+                      <input
+                        type="file"
+                        accept="image/png, image/jpeg"
+                        id="fav-look"
+                        className="hidden"
+                        onChange={(e) => handleFileChange(e, setPreviewFavLook)}
+                      />
+                    </label>
+                  ) : (
+                    <img src={previewFavLook} alt="Fav Look Preview" className="object-cover w-full h-full" />
+                  )}
+                </div>
+                <img src={agulhaFav} alt="Decoration" className="mt-[-22rem] z-10" width={400} />
+
+
+                <div className="text-xl self-end mt-20">
+                  <Link to={`/${username}/MeuPerfil`} className="text-[#FF441B] mr-4 hover:underline">
+                    Cancelar
+                  </Link>
+                  <button type="submit" className="cut-corner bg-black p-4 text-white">Salvar alterações</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </form>
-       
+        </form>
+
       </main>
     </div>
   );

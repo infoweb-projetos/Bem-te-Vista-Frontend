@@ -51,7 +51,7 @@ const StyleSelection: React.FC = () => {
   useEffect(() => {
     const userId = localStorage.getItem('userId');
     const userName = localStorage.getItem('username'); // Obtém o nome de usuário da localStorage
-    console.log('Username:', userName); // Adicione este log
+    //console.log('Username:', userName); // Adicione este log
     if (!userId || !userName) {
       console.error('User ID ou nome de usuário não encontrados.');
       alert('Usuário não autenticado. Redirecionando para o login.');

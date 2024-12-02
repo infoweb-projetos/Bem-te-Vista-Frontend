@@ -21,6 +21,7 @@ const MeuPerfil: React.FC = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [nome, setNome] = useState<string | null>(null);
+  const [bio, setBio] = useState<string | null>(null);
   const [estilos, setEstilos] = useState<{ estiloId: string; nome: string }[]>([]);
   const navigate = useNavigate();
 
@@ -35,6 +36,7 @@ const MeuPerfil: React.FC = () => {
       try {
         const response = await axios.get(`http://localhost:3000/users/profile/${username}`);
         setNome(response.data.nome);
+        setBio(response.data.bio)
         fetchEstilos(response.data.id);
       } catch (error) {
         console.error('Erro ao buscar dados do perfil:', error);
@@ -48,7 +50,7 @@ const MeuPerfil: React.FC = () => {
     const fetchEstilos = async (userId: string) => {
         try {
           const response = await axios.get(`http://localhost:3000/users/${userId}/styles`);
-          console.log('Estilos recebidos:', response.data);
+          //console.log('Estilos recebidos:', response.data);
           setEstilos(response.data); // Atualiza o estado com os estilos do usuário
         } catch (error) {
           console.error('Erro ao buscar estilos:', error);
@@ -81,7 +83,7 @@ const handleDeleteAccount = async () => {
           throw new Error('Usuário não autenticado.');
       }
 
-      console.log(userId);
+      //console.log(userId);
       
       const response = await fetch(`http://localhost:3000/users/${userId}`, {
           method: 'DELETE',
@@ -222,7 +224,7 @@ const handleDeleteAccount = async () => {
                     </li>
                 </ul>
                 {/* DESCRIÇÃO PERFIL */}
-                <p className="text-lg mt-4 w-[32rem]">Sobre o perfil</p>
+                <p className="text-lg mt-4 w-[32rem]">{bio ? bio : ''}</p>
                 {/* ESTILOS ESCOLHIDOS */}
                 <ul className="flex text-lg mt-2">
   {estilos.length > 0 ? (
