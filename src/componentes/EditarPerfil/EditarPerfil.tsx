@@ -123,7 +123,7 @@ const EditarPerfil: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
-    navigate('/login');
+    navigate('/');
   };
 
   const handleDeleteAccount = async () => {

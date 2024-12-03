@@ -83,20 +83,8 @@ const Landing: React.FC = () => {
       {/* Developers Section */}
       <section className="px-8 py-16 bg-[#EDECE7]">
         <h1 id="desenvolvedores" className="text-8xl font-light mb-10 min-w-400 text-center">Desenvolvedores</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <img
-            src={desenvolvedores}
-            alt="Desenvolvedores"
-            className="rounded-md"
-          />
-          <ul className="text-2xl space-y-2 pl-20">
-            <li>• Felipe Gabriel Emídio de Freitas</li>
-            <li>• Gabriel Ferreira Cavalcante</li>
-            <li>• Iraikare Rodrigues de Santana Alves Vieira</li>
-            <li>• Jordson Albino Galvão Tavares</li>
-            <li>• Lielly Nátally Germano Ferreira</li>
-            <li>• Lucas de Lima Nunes Fernandes</li>
-          </ul>
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-8 items-center">
+         
         </div>
       </section>
 

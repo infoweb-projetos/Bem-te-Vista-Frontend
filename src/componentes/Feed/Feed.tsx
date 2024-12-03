@@ -82,21 +82,21 @@ const Feed: React.FC = () => {
   const token = localStorage.getItem('token');
 
 
-const fetchEstilos = async (userId: string) => {
-        try {
-          const response = await axios.get(`http://localhost:3000/users/${userId}/styles`);
-          console.log('Estilos recebidos:', response.data);
-          setEstilos(response.data); // Atualiza o estado com os estilos do usuário
-        } catch (error) {
-          console.error('Erro ao buscar estilos:', error);
-          alert('Não foi possível carregar os estilos.');
-        }
-      };
+  const fetchEstilos = async (userId: string) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/users/${userId}/styles`);
+      setEstilos(response.data); // Atualiza o estado com os estilos do usuário
+    } catch (error) {
+      console.error('Erro ao buscar estilos:', error);
+    }
+  };
 
+  useEffect(() => {
     const userId = localStorage.getItem('userId');
     if (userId) {
-      fetchEstilos(userId); // Chamar a função para buscar os estilos do usuário
+      fetchEstilos(userId);
     }
+  }, []);
   
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
@@ -280,7 +280,7 @@ const toggleMenu = (postId: string): void => {
   const handleLogout = () => {
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
-    navigate('/login');
+    navigate('/');
 };
 
 const handleDeleteAccount = async () => {
@@ -472,7 +472,7 @@ const handleDeleteAccount = async () => {
         {postagens.map((post) => (
         <div key={post.id} className="post">
           {/* Modal para visualizar o post */}
-          <section className="flex flex-col w-[35rem] pt-6 min-h-[100vh]">
+          <section className="flex flex-col w-[35rem] pb-8 pt-6 min-h-[100vh]">
             {/* Modal de post */}
             {showPostModal === post.id && (
               <div className="w-100 h-100" id={`modal-${post.id}`}>
@@ -480,7 +480,7 @@ const handleDeleteAccount = async () => {
     className="w-[100vw] h-[100vh] fixed top-0 left-0 z-[5] bg-black bg-opacity-20"
     onClick={closePostModal}
 />
-                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[38rem] pt-4 px-4 flex flex-col bg-[#EDECE7] border border-black">
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[40rem] pt-4 px-4 flex flex-col bg-[#EDECE7] border border-black">
                   <div className="flex justify-between items-center">
                     {post.foto && (
                       <img
@@ -558,7 +558,7 @@ const handleDeleteAccount = async () => {
 
                   {/* Comentários no modal */}
                   <div className="mt-4">
-                    <h3>Comentários</h3>
+                    <h3 className="pb-6">Comentários</h3>
                     {post.comentarios?.length > 0 ? (
                       post.comentarios.map((comentario) => (
                         <ul key={comentario.id}>
@@ -685,7 +685,7 @@ const handleDeleteAccount = async () => {
                     <a onClick={() => openPostModal(post.id)} className="hover:cursor-pointer">
                     {post.foto && (
                       <>
-                        {console.log(`Imagem carregando: http://localhost:3000/uploads/${post.foto}`)}
+                        {/* {console.log(`Imagem carregando: http://localhost:3000/uploads/${post.foto}`)} */}
                         <img src={`http://localhost:3000/uploads/${post.foto}`} alt="Postagem" className="w-[100%] h-[100%] object-cover"/>
                       </>
                     )}

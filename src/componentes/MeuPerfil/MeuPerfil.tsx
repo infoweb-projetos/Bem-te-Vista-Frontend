@@ -48,14 +48,10 @@ const MeuPerfil: React.FC = () => {
   }, [username, navigate]);
 
     const fetchEstilos = async (userId: string) => {
-        try {
           const response = await axios.get(`http://localhost:3000/users/${userId}/styles`);
           //console.log('Estilos recebidos:', response.data);
           setEstilos(response.data); // Atualiza o estado com os estilos do usuário
-        } catch (error) {
-          console.error('Erro ao buscar estilos:', error);
-          alert('Não foi possível carregar os estilos.');
-        }
+
       };
 
 
@@ -73,7 +69,7 @@ const MeuPerfil: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
-    navigate('/login');
+    navigate('/');
 };
 
 const handleDeleteAccount = async () => {
@@ -117,7 +113,7 @@ const handleDeleteAccount = async () => {
       {/* MENU LATERAL */}
       <div className="bg-[#EDECE7] w-[20%] flex flex-col items-center fixed h-[100vh] text-2xl">
         <div className="pt-12 flex flex-col items-center justify-center">
-          <Link to="/Feed">
+          <Link to={`/${username}/Feed`}>
             <img src={logo} width="200" alt="Logo" />
           </Link>
           <nav className="mt-12">
