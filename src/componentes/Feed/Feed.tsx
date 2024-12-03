@@ -12,12 +12,15 @@ import kebabMenu from '../../imagens/Icons/kebab-menu-icon.svg'
 import saveIcon from '../../imagens/Icons/save-icon.svg'
 import sadIcon from '../../imagens/Icons/sad-icon.svg'
 import redflagIcon from '../../imagens/Icons/red-flag-icon.svg'
+import trashIcon from '../../imagens/Icons/trash-icon.svg'
 import blockIcon from '../../imagens/Icons/block-icon.svg'
 import muteIcon from '../../imagens/Icons/mute-icon.svg'
+import trashWhiteIcon from '../../imagens/Icons/trash-white-icon.svg';
 import cabideFeed from '../../imagens/cabide-feed.svg'
 import bordaBtv from '../../imagens/borda-btv.svg';
 import bordaFeed from '../../imagens/borda-feed.svg';
 import bgforms from '../../imagens/bg-login.png';
+import previewProfileImage from '../../imagens/fotoPerfilGenerico.png';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 import { useParams, useNavigate } from 'react-router-dom';
@@ -51,6 +54,8 @@ const Feed: React.FC = () => {
   const [comentarios, setComentarios] = useState<{ [key: string]: string }>({});
   const [showModal, setShowModal] = useState(false);
   const [showPostModal, setShowPostModal] = useState<string | null>(null);
+  const [showDeletePostModal, setShowDeletePostModal] = useState(false);
+  const [postIdToDelete, setPostIdToDelete] = useState<string | null>(null);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
   const [newPost, setNewPost] = useState<{ conteudo: string; foto: File | null; estilos: string[] }>({ // Mudado de 'descricao' para 'conteudo'
     conteudo: '',
@@ -60,6 +65,8 @@ const Feed: React.FC = () => {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const username = localStorage.getItem('username');
+  const userId = localStorage.getItem('userId');
+  console.log(userId)
   const [estilos, setEstilos] = useState<{ estiloId: string; nome: string }[]>([]);
   const navigate = useNavigate();
 
@@ -116,6 +123,16 @@ const Feed: React.FC = () => {
 
 const toggleMenu = (postId: string): void => {
     setActiveMenuId((prevId) => (prevId === postId ? null : postId));
+};
+
+const handleOpenDeletePostModal = () => {
+  setShowDeletePostModal(true);
+};
+
+// Função para fechar o modal
+const handleCloseDeletePostModal = () => {
+  setShowDeletePostModal(false);
+  
 };
   
   const handleCreatePost = async () => {
@@ -333,7 +350,7 @@ const handleDeleteAccount = async () => {
                     </a>
                 </li>
                 <li className="my-2 mt-6">
-    <Link to={`/${username}/MeuPerfil`} className="flex items-center">
+    <Link to={`/${username}/Perfil`} className="flex items-center">
         <img src={userIcon} width="20" className="mr-2" />
         <p className="max-md:hidden hover:underline">Meu Perfil</p>
     </Link>
@@ -393,9 +410,9 @@ const handleDeleteAccount = async () => {
                     <div className="flex justify-between w-full">
                         <div className="flex">
                             <a>
-                                <img src={bgforms} width="50" className="rounded-full" />
+                                <img src={previewProfileImage} width="50" className="rounded-full" />
                             </a>
-                            <input type="text" id="textoPost" placeholder="Voe no seu estilo..." className="border-none bg-transparent w-full ml-2 text-lg" value={newPost.conteudo}  onChange={(e) => setNewPost({ ...newPost, conteudo: e.target.value })} />
+                            <input type="text" id="textoPost" placeholder="Voe no seu estilo..." className="border-none bg-transparent w-[26rem] ml-2 text-lg" value={newPost.conteudo}  onChange={(e) => setNewPost({ ...newPost, conteudo: e.target.value })} />
                         </div>
                         <button onClick={closeModal} className="mt-[-3rem]">
                             <img src={closeIcon} width="15" />
@@ -454,8 +471,9 @@ const handleDeleteAccount = async () => {
                         <a onClick={closeModal} className="text-red-500 mr-4 hover:cursor-pointer hover:underline">
                             <p>Cancelar</p>
                         </a>
-                        <button onClick={(e) => {e.preventDefault(); handleCreatePost();}}>
+                        <button className="cut-corner bg-black text-white flex items-center px-4 py-2" onClick={(e) => {e.preventDefault(); handleCreatePost();}}>
                           <p>Publicar</p>
+                          <img src={needleIcon} className="ml-2"/>
                         </button>
                         {/* <label htmlFor="submitPost" className="cut-corner bg-black text-white flex px-4 py-2 hover:cursor-pointer" >
                             <p className="mr-2">Publicar</p>
@@ -493,7 +511,7 @@ const handleDeleteAccount = async () => {
                       <div className="flex justify-between items-center">
                         <div className="flex items-center">
                           <a>
-                            <img src={bgforms} width="30" className="rounded-full mr-2" />
+                            <img src={previewProfileImage} width="30" className="rounded-full mr-2" />
                           </a>
                           <p>@{post.autor.nome}</p>
                         </div>
@@ -515,7 +533,7 @@ const handleDeleteAccount = async () => {
                       <p className="mt-2">
                         <b>{post.autor.nome}</b> {post.conteudo}
                       </p>
-                      <div className="flex mt-4">
+                      <div className="flex mt-6">
                         <button>
                           <svg
                             width="24"
@@ -563,7 +581,7 @@ const handleDeleteAccount = async () => {
                       post.comentarios.map((comentario) => (
                         <ul key={comentario.id}>
                           <li className="flex items-center mb-4">
-                            <img src={bgforms} width="30" className="rounded-full mr-2" />
+                            <img src={previewProfileImage} width="30" className="rounded-full mr-2" />
                             <p>
                               <b>{comentario.autor.nome}</b> - {comentario.conteudo}
                             </p>
@@ -575,7 +593,7 @@ const handleDeleteAccount = async () => {
                     )}
 
                     <div className="mt-8 flex">
-                      <img src={bgforms} width="30" className="rounded-full mr-2" />
+                      <img src={previewProfileImage} width="30" className="rounded-full mr-2" />
                       <input
                         type="text"
                         placeholder="Comentar"
@@ -609,13 +627,37 @@ const handleDeleteAccount = async () => {
               </div>
             )}
           
+            {showDeletePostModal && (
+              <div>
+                <span
+                  className="w-[100vw] h-[100vh] fixed top-0 left-0 z-[5] bg-black bg-opacity-20"
+                  onClick={handleCloseDeletePostModal}
+                />
+                <div className="fixed text-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[30rem] py-8 px-4 flex flex-col bg-[#EDECE7] border border-black">
+                  <h2 className="mb-4 text-xl">Quer mesmo deletar sua postagem?</h2>
+                  <div className="flex justify-center pr-8">
+                    <button className="mr-2" onClick={handleCloseDeletePostModal}>
+                      <p className="text-red-500 underline-offset-1 hover:underline">Cancelar</p>
+                    </button>
+                    <button className="flex items-center ml-2 bg-black cut-corner text-white px-4 py-2" onClick={() => {
+    handleDeletePost(post.id);
+    handleCloseDeletePostModal();
+  }}>
+                      <p>Deletar</p>
+                      <img className="ml-2" src={trashWhiteIcon} />
+                    </button>  
+                  </div>
+                </div>
+              </div>
+              
 
+            )}
 
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
                         {/* <!-- Foto de perfil --> */}
-                        <img src={bgforms} className="mr-2 w-[30px] h-[30px] rounded-full"/>
-                        <a onClick={() => window.location.href = `/${post.autor.nome}/MeuPerfil`}
+                        <img src={previewProfileImage} className="mr-2 w-[30px] h-[30px] rounded-full"/>
+                        <a onClick={() => window.location.href = `/${post.autor.nome}/Perfil`}
                         >
                           <p>@{post.autor.nome}</p>
                         </a>
@@ -627,59 +669,63 @@ const handleDeleteAccount = async () => {
                         {activeMenuId === post.id}
                         <img src={kebabMenu} width="5" id="kebab-menu" className=""/>
                     </button>
-                    {/* <!-- Menu post --> */}
-                    {activeMenuId === post.id && (
-                        <div id={`menu-${post.id}`} className="absolute z-5 ml-[22rem] mt-[20rem] border border-black bg-[#EDECE7] p-4">
-                        <ul>
-                            <li className="mb-4">
-                                <button className="flex items-center border-none bg-transparent">
-                                    <img src={saveIcon} />
-                                    <p className="ml-2 hover:underline">Salvar</p>
-                                </button>      
-                            </li>
-                            <li className="mb-4">
-                                <button className="flex items-center border-none bg-transparent">
-                                    <img src={clipIcon}/>                                   
-                                    <p className="ml-2 hover:underline">Copiar link</p>
-                                </button>      
-                            </li>
-                            <li className="mb-4" onClick={() => handleDeletePost(post.id)}>
-                                <button className="flex items-center border-none bg-transparent">
-                                    <img src={sadIcon}/>                                 
-                                    <p className="ml-2 hover:underline">Deletar</p>
-                                </button>      
-                            </li>
-                            <li className="mb-4">
-                                <button className="flex items-center border-none bg-transparent">
-                                    <img src={userIcon} />
-                                    <p className="ml-2 hover:underline">Visualizar perfil</p>
-                                </button>      
-                            </li>
-                            <li className="mb-4">
-                                <button className="flex items-center border-none bg-transparent">
-                                    <img src={muteIcon} />
-                                    <p className="ml-2 hover:underline">Silenciar @{post.autor.nome}
-                                      {/* {username} */}
-                                      </p>
-                                </button>      
-                            </li>
-                            <li className="mb-4">
-                                <button className="flex items-center border-none bg-transparent">
-                                    <img src={blockIcon} />
-                                    <p className="ml-2 hover:underline">Bloquear @{post.autor.nome}
-                                      </p>
-                                </button>      
-                            </li>
-                            <li>
-                                <button className="flex items-center border-none bg-transparent">
-                                    <img src={redflagIcon} width="18"/>
-                                    <p className="ml-2 text-red-500 hover:underline">Denunciar publicação</p>
-                                </button>      
-                            </li>
-                        </ul>
-                    </div>
+                   {/* <!-- Menu post --> */}
+{activeMenuId === post.id && (
+  <div id={`menu-${post.id}`} className="absolute z-5 ml-[22rem] mt-[20rem] border border-black bg-[#EDECE7] p-4">
+    <ul>
+      <li className="mb-4">
+        <button className="flex items-center border-none bg-transparent">
+          <img src={saveIcon} />
+          <p className="ml-2 hover:underline">Salvar</p>
+        </button>
+      </li>
+      <li className="mb-4">
+        <button className="flex items-center border-none bg-transparent">
+          <img src={clipIcon} />
+          <p className="ml-2 hover:underline">Copiar link</p>
+        </button>
+      </li>
 
-                    )}
+      {/* Botão "Deletar" apenas para o autor do post */}
+      {post.autor.id === userId && (
+        <li className="mb-4" onClick={handleOpenDeletePostModal}>
+          <button className="flex items-center border-none bg-transparent">
+            <img src={trashIcon} className="w-[1rem]" />
+            <p className="ml-2 hover:underline">Deletar</p>
+          </button>
+        </li>
+      )}
+
+      <li className="mb-4">
+        <button className="flex items-center border-none bg-transparent">
+          <img src={userIcon} className="w-[1rem]" />
+          <p className="ml-2 hover:underline">Visualizar perfil</p>
+        </button>
+      </li>
+      <li className="mb-4">
+        <button className="flex items-center border-none bg-transparent">
+          <img src={muteIcon} />
+          <p className="ml-2 hover:underline">
+            Silenciar @{post.autor.nome}
+          </p>
+        </button>
+      </li>
+      <li className="mb-4">
+        <button className="flex items-center border-none bg-transparent">
+          <img src={blockIcon} />
+          <p className="ml-2 hover:underline">Bloquear @{post.autor.nome}</p>
+        </button>
+      </li>
+      <li>
+        <button className="flex items-center border-none bg-transparent">
+          <img src={redflagIcon} width="18" />
+          <p className="ml-2 text-red-500 hover:underline">Denunciar publicação</p>
+        </button>
+      </li>
+    </ul>
+  </div>
+)}
+
                 </div>
                 <div className=" w-[35rem] h-[35rem]">
                     <a onClick={() => openPostModal(post.id)} className="hover:cursor-pointer">
@@ -774,7 +820,7 @@ const handleDeleteAccount = async () => {
             <ul className="flex flex-col w-[150%] mt-2">
                 <li className="w-full flex justify-between items-center py-2">
                     <a className="flex items-center hover:underline hover:cursor-pointer">
-                        <img src={bgforms} width="30"  className="rounded-full mr-2" />
+                        <img src={previewProfileImage} width="30"  className="rounded-full mr-2" />
                         <p>Iraikare Rodrigues</p>
                     </a>
                     <button className="hover:underline">
@@ -783,7 +829,7 @@ const handleDeleteAccount = async () => {
                 </li>
                 <li className="w-full flex justify-between items-center py-2">
                     <a className="flex items-center hover:underline hover:cursor-pointer">
-                        <img src={bgforms} width="30"  className="rounded-full mr-2" />
+                        <img src={previewProfileImage} width="30"  className="rounded-full mr-2" />
                         <p>Iraikare Rodrigues</p>
                     </a>
                     <button className="hover:underline">
@@ -792,7 +838,7 @@ const handleDeleteAccount = async () => {
                 </li>
                 <li className="w-full flex justify-between items-center py-2">
                     <a className="flex items-center hover:underline hover:cursor-pointer">
-                        <img src={bgforms} width="30"  className="rounded-full mr-2" />
+                        <img src={previewProfileImage} width="30"  className="rounded-full mr-2" />
                         <p>Iraikare Rodrigues</p>
                     </a>
                     <button className="hover:underline">
@@ -801,7 +847,7 @@ const handleDeleteAccount = async () => {
                 </li>
                 <li className="w-full flex justify-between items-center py-2">
                     <a className="flex items-center hover:underline hover:cursor-pointer">
-                        <img src={bgforms} width="30"  className="rounded-full mr-2" />
+                        <img src={previewProfileImage} width="30"  className="rounded-full mr-2" />
                         <p>Iraikare Rodrigues</p>
                     </a>
                     <button className="hover:underline">

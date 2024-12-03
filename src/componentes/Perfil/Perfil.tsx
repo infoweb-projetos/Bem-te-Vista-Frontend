@@ -16,7 +16,7 @@ import agulhaFav from '../../imagens/argulha.png';
 import bordaBtv from '../../imagens/borda-btv.svg';
 import axios from 'axios'; 
 
-const MeuPerfil: React.FC = () => {
+const Perfil: React.FC = () => {
   const { username } = useParams<{ username: string }>(); // Extrai o parâmetro da URL
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -125,7 +125,7 @@ const handleDeleteAccount = async () => {
                     </a>
                 </li>
                 <li className="my-2 mt-6">
-    <Link to={`/${username}/MeuPerfil`} className="flex items-center">
+    <Link to={`/${username}/Perfil`} className="flex items-center">
         <img src={userIcon} width="20" className="mr-2" />
         <p className="max-md:hidden hover:underline">Meu Perfil</p>
     </Link>
@@ -191,18 +191,19 @@ const handleDeleteAccount = async () => {
               </div>
               
               <div className="flex items-center">
-                <h2 className="text-3xl font-semibold mr-4">{nome ? nome : 'Nome do Usuário'}</h2>
-                
-                  <Link to={`/${username}/EditarPerfil`} className="cut-corner-border flex bg-black text-xl font-medium">
-                      <div className="bg-[#EDECE7] hover:bg-[#F9C62E] transition duration-300 ease-in-out w-[10rem]">
-                          <div className="w-full h-full flex items-center justify-between px-2 py-1">
-                              <img src={pencilIcon} width="20" />
-                              <p>Editar perfil</p>
-                          </div>
-                      </div>
-                  </Link>
-                
-              </div>
+  <h2 className="text-3xl font-semibold mr-4">{nome ? nome : 'Nome do Usuário'}</h2>
+
+  {localStorage.getItem('username') === username && (
+    <Link to={`/${username}/EditarPerfil`} className="cut-corner-border flex bg-black text-xl font-medium">
+      <div className="bg-[#EDECE7] hover:bg-[#F9C62E] transition duration-300 ease-in-out w-[10rem]">
+        <div className="w-full h-full flex items-center justify-between px-2 py-1">
+          <img src={pencilIcon} width="20" alt="Ícone de edição" />
+          <p>Editar perfil</p>
+        </div>
+      </div>
+    </Link>
+  )}
+</div>
                 <h2 className="text-2xl font-semibold mr-4">{username ? username : 'Nome do Perfil'}</h2>
                 
                 <ul className="flex mt-2 text-lg">
@@ -279,4 +280,4 @@ const handleDeleteAccount = async () => {
   );
 };
 
-export default MeuPerfil;
+export default Perfil;

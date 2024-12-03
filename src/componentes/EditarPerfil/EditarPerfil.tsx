@@ -220,7 +220,7 @@ const EditarPerfil: React.FC = () => {
       console.log(a)
       console.log(b)
       alert('Perfil atualizado com sucesso!');
-      navigate(`/${username}/MeuPerfil`);
+      navigate(`/${username}/Perfil`);
 
     } catch (error) {
       console.error('Erro ao atualizar o perfil:', error);
@@ -250,7 +250,7 @@ const EditarPerfil: React.FC = () => {
                 </a>
               </li>
               <li className="my-2 mt-6">
-                <Link to={`/${username}/MeuPerfil`} className="flex items-center">
+                <Link to={`/${username}/Perfil`} className="flex items-center">
                   <img src={userIcon} width="20" className="mr-2" />
                   <p className="max-md:hidden hover:underline">Meu Perfil</p>
                 </Link>

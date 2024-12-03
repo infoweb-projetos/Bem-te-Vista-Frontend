@@ -4,7 +4,7 @@ import UserForm from './componentes/Cadastro/Cadastro';
 import Login from './componentes/Login/Login';
 import StyleSelection from './componentes/EscolherEstilo/EscolherEstilo';
 import AuthRoute from './AuthRoute';
-import MeuPerfil from './componentes/MeuPerfil/MeuPerfil';
+import Perfil from './componentes/Perfil/Perfil';
 import Feed from './componentes/Feed/Feed';
 import EditarPerfil from './componentes/EditarPerfil/EditarPerfil';
 import Landing from './componentes/Landing/Landing';
@@ -25,8 +25,12 @@ const App: React.FC = () => {
           element={<AuthRoute element={<StyleSelection />} />} 
         />
         <Route 
-          path="/:username/MeuPerfil"
-          element={<AuthRoute element={<MeuPerfil />} />} 
+          path="/:username/EscolherEstilo"
+          element={<AuthRoute element={<StyleSelection />} />} 
+        />
+        <Route 
+          path="/:username/Perfil"
+          element={<AuthRoute element={<Perfil/>} />} 
         />
         <Route
            path="/:username/Feed" element={<Feed />}
