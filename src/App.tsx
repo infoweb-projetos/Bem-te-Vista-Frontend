@@ -7,11 +7,13 @@ import AuthRoute from './AuthRoute';
 import MeuPerfil from './componentes/MeuPerfil/MeuPerfil';
 import Feed from './componentes/Feed/Feed';
 import EditarPerfil from './componentes/EditarPerfil/EditarPerfil';
+import Landing from './componentes/Landing/Landing';
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+      <Route path="/" element={<Landing />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Cadastro" element={<UserForm />} />
         <Route 

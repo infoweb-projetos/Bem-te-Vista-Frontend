@@ -2,6 +2,10 @@ input:focus, textarea:focus, select:focus {
   outline: none
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Italiana&display=swap');
+.italiana-font {
+  font-family: 'Italiana', serif;
+}
 /* Código pra cortar esquina do botão */
 
 .cut-corner{
