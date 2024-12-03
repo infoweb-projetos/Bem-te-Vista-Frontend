@@ -97,30 +97,21 @@ const fetchEstilos = async (userId: string) => {
       fetchEstilos(userId); // Chamar a função para buscar os estilos do usuário
     }
   
-  const showPreviewPost = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-        const file = files[0];
-        const src = URL.createObjectURL(file);
-
-        setNewPost({ ...newPost, foto: file });
-
-        const previewDiv = document.getElementById("preview-post") as HTMLDivElement;
-        const preview = document.getElementById("file-ip-4-preview") as HTMLImageElement;
-        const label = document.getElementById("labelPost") as HTMLLabelElement;
-        const removeButton = document.getElementById("botaoRemoverPost") as HTMLButtonElement;
-
-        if (previewDiv && preview && label && removeButton) {
-            previewDiv.style.display = "block";
-            label.style.display = "none";
-            preview.src = src;
-            preview.style.display = "block";
-            preview.style.height = "100%";
-            preview.style.width = "100%";
-            removeButton.style.display = "block";
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+          setNewPost((prevPost) => ({ ...prevPost, foto: file }));
+  
+          // File preview
+          const reader = new FileReader();
+          reader.onload = () => {
+              const previewElement = document.getElementById("file-ip-4-preview") as HTMLImageElement;
+              if (previewElement) previewElement.src = reader.result as string;
+          };
+          reader.readAsDataURL(file);
         }
-    }
-};
+    };
+
 
 const toggleMenu = (postId: string): void => {
     setActiveMenuId((prevId) => (prevId === postId ? null : postId));
@@ -391,9 +382,12 @@ const handleDeleteAccount = async () => {
         )}
         {/* <!-- Modal de criar post --> */}
         {showModal && (
-        <div className='mx-auto fixed'>
-            <span className="w-[100vw] h-[100vh] fixed top-0 left-0 z-1 bg-black bg-opacity-20"></span>
-            <div id="modalCriarPost" className="bg-[#EDECE7] fixed z-10 w-[35rem] centralizado-fixed mx-auto px-4 py-6 mt-24 border border-black">
+        <div className='mx-auto fixed z-50'>
+            <span
+                className="w-[100vw] h-[100vh] fixed top-0 left-0 z-40 bg-black bg-opacity-20"
+                onClick={closeModal}
+            />
+            <div id="modalCriarPost" className="bg-[#EDECE7] fixed z-50 w-[35rem] centralizado-fixed mx-auto px-4 py-6 mt-24 border border-black">
                 <form className="flex flex-col">
                     <div className="flex justify-between w-full">
                         <div className="flex">
@@ -440,15 +434,17 @@ const handleDeleteAccount = async () => {
                     </div> */}
                     <div className="dashed-border w-full h-[20rem] mt-4 flex items-center justify-center">
                         <button 
-                        onClick={handleCreatePost}
+                        onClick={closeModal}
                         id="botaoRemoverPost" className="hidden absolute mt-[-20rem] mr-[-33rem] bg-white rounded-full border border-black p-1">
                             <img src={closeIcon} width="15" />
                         </button>
-                        <label id="labelPost" htmlFor="imagemPost" className="text-lg py-2 px-4 bg-[#F9C62E] border border-black hover:cursor-pointer hover:bg-[#ECB100] transition ease-in-out duration-300">
+                        <label id="labelPost" htmlFor="imagemPost" className="text-lg z-10 py-2 px-4 bg-[#F9C62E] border border-black hover:cursor-pointer hover:bg-[#ECB100] transition ease-in-out duration-300">
                             <p>Selecionar do computador</p>
-                            <input type="file" id="imagemPost" className="hidden" accept="image/png, image/jpeg" onChange={(e) => setNewPost({ ...newPost, foto: e.target.files ? e.target.files[0] : null })}
+                            <input type="file" id="imagemPost" className="hidden" accept="image/*"  onChange={handleFileChange}
                             />
+                            
                         </label>
+                        <img id="file-ip-4-preview" className="absolute w-[33rem] h-[20rem] object-cover" />
                         <div className="hidden w-full h-full" id="preview-post">
                             <img className="hidden object-cover" id="file-ip-4-preview" />
                         </div>
@@ -457,11 +453,14 @@ const handleDeleteAccount = async () => {
                         <a onClick={closeModal} className="text-red-500 mr-4 hover:cursor-pointer hover:underline">
                             <p>Cancelar</p>
                         </a>
-                        <label htmlFor="submitPost" className="cut-corner bg-black text-white flex px-4 py-2 hover:cursor-pointer" >
+                        <button onClick={(e) => {e.preventDefault(); handleCreatePost();}}>
+                          <p>Publicar</p>
+                        </button>
+                        {/* <label htmlFor="submitPost" className="cut-corner bg-black text-white flex px-4 py-2 hover:cursor-pointer" >
                             <p className="mr-2">Publicar</p>
                             <img src={needleIcon} />
                             <input id="submitPost" name="submitPost" type="submit" className="hidden" />
-                        </label>
+                        </label> */}
                     </div>
                 </form>
             </div>
@@ -476,7 +475,10 @@ const handleDeleteAccount = async () => {
             {/* Modal de post */}
             {showPostModal === post.id && (
               <div className="w-100 h-100" id={`modal-${post.id}`}>
-                <span className="w-[100vw] h-[100vh] fixed top-0 left-0 z-1 bg-black bg-opacity-20"></span>
+                <span
+    className="w-[100vw] h-[100vh] fixed top-0 left-0 z-[5] bg-black bg-opacity-20"
+    onClick={closePostModal}
+/>
                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[38rem] pt-4 px-4 flex flex-col bg-[#EDECE7] border border-black">
                   <div className="flex justify-between items-center">
                     {post.foto && (
@@ -593,7 +595,8 @@ const handleDeleteAccount = async () => {
                       </a>
                       <button
                         className="bg-black cut-corner text-white flex py-2 px-4 hover:cursor-pointer"
-                        onClick={() => handleAddComment(post.id)}
+                        // onClick={() => handleAddComment(post.id)}
+                        onClick={(e) => {e.preventDefault(); handleAddComment(post.id);}}
                       >
                         <p className="mr-2" >Comentar</p>
                         <img src={needleIcon} alt="Comentar" />
@@ -735,7 +738,7 @@ const handleDeleteAccount = async () => {
         
 
     </main>
-    <aside className="w-[30%] bg-[#EDECE7] z-[-2] min-h-[100vh] flex flex-col items-center fixed right-0 pt-12">
+    <aside className="w-[30%] bg-[#EDECE7] min-h-[100vh] flex flex-col items-center fixed right-0 pt-12 z-1">
         <div className="flex flex-col items-center w-[22rem]">
             <p>
                 Confira algumas ideias nos seus estilos favoritos:

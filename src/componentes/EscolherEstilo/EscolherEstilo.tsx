@@ -122,18 +122,18 @@ const StyleSelection: React.FC = () => {
           <form onSubmit={handleSubmit} className="font-[Martel Sans] text-center">
             <div className="flex flex-wrap justify-between items-center pr-2 overflow-y-scroll overflow-x-hidden h-[19rem] custom-scroll select-none">
               {styles.map(style => (
-                <div className="div-estilo mb-1" key={style.id}>
+                <div className="div-estilo mb-1" key={style.name}>
                   <input
                     type="checkbox"
-                    value={style.id}
+                    value={style.name}
                     className="checkboxstyle"
-                    id={`checkbox-${style.id}`}
-                    onChange={() => handleStyleChange(style.id)}
-                    checked={selectedStyles.includes(style.id)}
-                    disabled={!selectedStyles.includes(style.id) && selectedStyles.length >= 5}
+                    id={`checkbox-${style.name}`}
+                    onChange={() => handleStyleChange(style.name)}
+                    checked={selectedStyles.includes(style.name)}
+                    disabled={!selectedStyles.includes(style.name) && selectedStyles.length >= 5}
                   />
                   <label
-                    htmlFor={`checkbox-${style.id}`}
+                    htmlFor={`checkbox-${style.name}`}
                     className="label-estilo bg-cover flex items-center justify-center w-[166px] h-[166px] border border-[#EDECE7] cursor-pointer"
                     style={{ backgroundImage: `url(${style.bgImage})` }}
                   >
@@ -141,7 +141,7 @@ const StyleSelection: React.FC = () => {
                     <img
                       src={hearticon}
                       width="25"
-                      className={selectedStyles.includes(style.id) ? 'absolute z-10 mt-[-172px] mr-[-172px]' : 'hidden'}
+                      className={selectedStyles.includes(style.name) ? 'absolute z-10 mt-[-172px] mr-[-172px]' : 'hidden'}
                     />
                   </label>
                 </div>

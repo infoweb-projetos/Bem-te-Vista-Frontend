@@ -303,7 +303,7 @@ const EditarPerfil: React.FC = () => {
           {/* Banner */}
           <div className="w-full h-[40vh] flex items-center justify-center" id="banner-preview">
             {!previewBanner ? (
-              <label htmlFor="banner">
+              <label htmlFor="banner" className="">
                 <img src={previewBannerImage} alt="Upload" className="mx-auto my-auto" />
                 <input
                   type="file"
@@ -326,7 +326,7 @@ const EditarPerfil: React.FC = () => {
                   {previewProfile && (
                     <button
                       onClick={() => setPreviewProfile(null)}
-                      className="absolute bg-white rounded-full p-1 border border-red-500 -top-2 -right-2"
+                      className="absolute bg-white rounded-full p-1 border border-red-500 top-[1rem] right-[1.5rem]"
                     >
                       <img src={closeIcon} alt="Remove" width={12} />
                     </button>
@@ -399,13 +399,13 @@ const EditarPerfil: React.FC = () => {
                   {previewFavLook && (
                     <button
                       onClick={() => setPreviewFavLook(null)}
-                      className="absolute bg-white rounded-full p-1 border border-red-500 -top-2 -right-2"
+                      className="absolute z-20 bg-white rounded-full p-1 border border-red-500 -top-2 -right-2"
                     >
                       <img src={closeIcon} alt="Remove" width={12} />
                     </button>
                   )}
                   {!previewFavLook ? (
-                    <label htmlFor="fav-look" className="cursor-pointer">
+                    <label htmlFor="fav-look" className="cursor-pointer z-20">
                       <img src={pencilIcon} alt="Upload" width={80} />
                       <input
                         type="file"
