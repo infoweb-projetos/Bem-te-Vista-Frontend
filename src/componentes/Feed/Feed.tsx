@@ -30,6 +30,7 @@ interface User {
 interface Comentario {
   id: string;
   conteudo: string;
+  autor: User;
 }
 
 interface Post {
@@ -564,7 +565,7 @@ const handleDeleteAccount = async () => {
                           <li className="flex items-center mb-4">
                             <img src={bgforms} width="30" className="rounded-full mr-2" />
                             <p>
-                              <b>{comentario.id}</b> - {comentario.conteudo}
+                              <b>{comentario.autor.nome}</b> - {comentario.conteudo}
                             </p>
                           </li>
                         </ul>
@@ -642,10 +643,10 @@ const handleDeleteAccount = async () => {
                                     <p className="ml-2 hover:underline">Copiar link</p>
                                 </button>      
                             </li>
-                            <li className="mb-4">
+                            <li className="mb-4" onClick={() => handleDeletePost(post.id)}>
                                 <button className="flex items-center border-none bg-transparent">
                                     <img src={sadIcon}/>                                 
-                                    <p className="ml-2 hover:underline">Não tenho interesse</p>
+                                    <p className="ml-2 hover:underline">Deletar</p>
                                 </button>      
                             </li>
                             <li className="mb-4">
