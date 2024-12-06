@@ -8,39 +8,72 @@ import cabide from '../../imagens/cabide.svg';
 import logo from '../../imagens/logo.svg';
 import hearticon from '../../imagens/Icons/heart-icon.svg';
 
+import classicobg from '../../imagens/estilos/classicobg.png';
+import minimalistabg from '../../imagens/estilos/minimalistabg.png';
+import bohobg from '../../imagens/estilos/bohobg.png';
+import vintagebg from '../../imagens/estilos/vintagebg.png';
+import retrobg from '../../imagens/estilos/retrobg.png';
+import punkbg from '../../imagens/estilos/punkbg.png';
+import goticobg from '../../imagens/estilos/goticobg.png';
+import grungebg from '../../imagens/estilos/grungebg.png';
+import streetwearbg from '../../imagens/estilos/streetwearbg.png';
+import esportivobg from '../../imagens/estilos/esportivobg.png';
+import preppybg from '../../imagens/estilos/preppybg.png';
+import chicbg from '../../imagens/estilos/chicbg.png';
+import rokerbg from '../../imagens/estilos/rockerbg.png';
+import romanticobg from '../../imagens/estilos/romanticobg.png';
+import futuristabg from '../../imagens/estilos/futuristabg.png';
+import cowboybg from '../../imagens/estilos/cowboybg.png';
+import militarbg from '../../imagens/estilos/militarbg.png';
+import glambg from '../../imagens/estilos/glambg.png';
+import grungerevivalbg from '../../imagens/estilos/grungerevivalbg.png';
+import cyberpunkbg from '../../imagens/estilos/cyberpunkbg.png';
+import safaribg from '../../imagens/estilos/safaribg.png';
+import hipsterbg from '../../imagens/estilos/hipsterbg.png';
+import modernobg from '../../imagens/estilos/modernobg.png';
+import casualbg from '../../imagens/estilos/casualbg.png';
+import formalbg from '../../imagens/estilos/formalbg.png';
+import artsybg from '../../imagens/estilos/artsybg.png';
+import kawaiibg from '../../imagens/estilos/kawaiibg.png';
+import coquettebg from '../../imagens/estilos/coquettebg.png';
+import pinupbg from '../../imagens/estilos/pinupbg.png';
+import y2kbg from '../../imagens/estilos/y2kbg.png';
+
+
 // Lista de estilos com a imagem de fundo associada
 const styles = [
-  { id: 'classico', name: 'Clássico', bgImage: bgforms },
-  { id: 'minimalista', name: 'Minimalista', bgImage: bgforms },
-  { id: 'boho', name: 'Boho', bgImage: bgforms },
-  { id: 'vintage', name: 'Vintage', bgImage: bgforms },
-  { id: 'retro', name: 'Retro', bgImage: bgforms },
-  { id: 'punk', name: 'Punk', bgImage: bgforms },
-  { id: 'gotico', name: 'Gótico', bgImage: bgforms },
-  { id: 'grunge', name: 'Grunge', bgImage: bgforms },
-  { id: 'streetwear', name: 'Streetwear', bgImage: bgforms },
-  { id: 'esportivo', name: 'Esportivo', bgImage: bgforms },
-  { id: 'preppy', name: 'Preppy', bgImage: bgforms },
-  { id: 'chic', name: 'Chic', bgImage: bgforms },
-  { id: 'roker', name: 'Roker', bgImage: bgforms },
-  { id: 'romantico', name: 'Romântico', bgImage: bgforms },
-  { id: 'futurista', name: 'Futurista', bgImage: bgforms },
-  { id: 'cowboy', name: 'Cowboy', bgImage: bgforms },
-  { id: 'militar', name: 'Militar', bgImage: bgforms },
-  { id: 'glam', name: 'Glam', bgImage: bgforms },
-  { id: 'grunge-revival', name: 'Grunge Revival', bgImage: bgforms },
-  { id: 'cyberpunk', name: 'Cyberpunk', bgImage: bgforms },
-  { id: 'safari', name: 'Safari', bgImage: bgforms },
-  { id: 'hipster', name: 'Hipster', bgImage: bgforms },
-  { id: 'moderno', name: 'Moderno', bgImage: bgforms },
-  { id: 'casual', name: 'Casual', bgImage: bgforms },
-  { id: 'formal', name: 'Formal', bgImage: bgforms },
-  { id: 'artsy', name: 'Artsy', bgImage: bgforms },
-  { id: 'kawaii', name: 'Kawaii', bgImage: bgforms },
-  { id: 'androgino', name: 'Andrógino', bgImage: bgforms },
-  { id: 'pinup', name: 'Pin-up', bgImage: bgforms },
-  { id: 'y2k', name: 'Y2K', bgImage: bgforms },
+  { id: 'artsy', name: 'Artsy', bgImage: artsybg },
+  { id: 'boho', name: 'Boho', bgImage: bohobg },
+  { id: 'casual', name: 'Casual', bgImage: casualbg },
+  { id: 'chic', name: 'Chic', bgImage: chicbg },
+  { id: 'classico', name: 'Clássico', bgImage: classicobg },
+  { id: 'androgino', name: 'Coquette', bgImage: coquettebg },
+  { id: 'cowboy', name: 'Cowboy', bgImage: cowboybg },
+  { id: 'cyberpunk', name: 'Cyberpunk', bgImage: cyberpunkbg },
+  { id: 'esportivo', name: 'Esportivo', bgImage: esportivobg },
+  { id: 'formal', name: 'Formal', bgImage: formalbg },
+  { id: 'futurista', name: 'Futurista', bgImage: futuristabg },
+  { id: 'glam', name: 'Glam', bgImage: glambg },
+  { id: 'gotico', name: 'Gótico', bgImage: goticobg },
+  { id: 'grunge', name: 'Grunge', bgImage: grungebg },
+  { id: 'grunge-revival', name: 'Grunge Revival', bgImage: grungerevivalbg },
+  { id: 'hipster', name: 'Hipster', bgImage: hipsterbg },
+  { id: 'kawaii', name: 'Kawaii', bgImage: kawaiibg },
+  { id: 'militar', name: 'Militar', bgImage: militarbg },
+  { id: 'minimalista', name: 'Minimalista', bgImage: minimalistabg },
+  { id: 'moderno', name: 'Moderno', bgImage: modernobg },
+  { id: 'pinup', name: 'Pin-up', bgImage: pinupbg },
+  { id: 'preppy', name: 'Preppy', bgImage: preppybg },
+  { id: 'punk', name: 'Punk', bgImage: punkbg },
+  { id: 'retro', name: 'Retro', bgImage: retrobg },
+  { id: 'roker', name: 'Roker', bgImage: rokerbg },
+  { id: 'romantico', name: 'Romântico', bgImage: romanticobg },
+  { id: 'safari', name: 'Safari', bgImage: safaribg },
+  { id: 'streetwear', name: 'Streetwear', bgImage: streetwearbg },
+  { id: 'vintage', name: 'Vintage', bgImage: vintagebg },
+  { id: 'y2k', name: 'Y2K', bgImage: y2kbg },
 ];
+
 
 const StyleSelection: React.FC = () => {
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
@@ -133,17 +166,25 @@ const StyleSelection: React.FC = () => {
                     disabled={!selectedStyles.includes(style.name) && selectedStyles.length >= 5}
                   />
                   <label
-                    htmlFor={`checkbox-${style.name}`}
-                    className="label-estilo bg-cover flex items-center justify-center w-[166px] h-[166px] border border-[#EDECE7] cursor-pointer"
-                    style={{ backgroundImage: `url(${style.bgImage})` }}
-                  >
-                    <p className="text-center stroke-text text-2xl">{style.name}</p>
-                    <img
-                      src={hearticon}
-                      width="25"
-                      className={selectedStyles.includes(style.name) ? 'absolute z-10 mt-[-172px] mr-[-172px]' : 'hidden'}
-                    />
-                  </label>
+                  htmlFor={`checkbox-${style.name}`}
+                  className="label-estilo relative flex items-center justify-center w-[166px] h-[166px] border border-[#EDECE7] cursor-pointer"
+                >
+                  {/* Imagem de fundo com filtro de escurecimento aplicado apenas na camada de fundo */}
+                  <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${style.bgImage})`, filter: 'brightness(70%)' }}
+                  ></div>
+
+                  {/* Texto sobre a imagem */}
+                  <p className="relative z-10 text-center stroke-text text-2xl">{style.name}</p>
+
+                  {/* Ícone de coração */}
+                  <img
+                    src={hearticon}
+                    width="25"
+                    className={selectedStyles.includes(style.name) ? 'absolute z-10 mt-[-172px] mr-[-172px]' : 'hidden'}
+                  />
+                </label>
                 </div>
               ))}
             </div>

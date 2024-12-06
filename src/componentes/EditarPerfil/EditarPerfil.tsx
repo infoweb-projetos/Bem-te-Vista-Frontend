@@ -16,13 +16,6 @@ import agulhaFav from '../../imagens/argulha.png';
 import bordaBtv from '../../imagens/borda-btv.svg';
 import axios from 'axios';
 
-// const predefinedStyles = [
-//   'Clássico', 'Minimalista', 'Boho', 'Vintage', 'Retro', 'Punk', 'Gótico',
-//   'Grunge', 'Streetwear', 'Esportivo', 'Preppy', 'Chic', 'Roker', 'Romântico',
-//   'Eclético', 'Futurista', 'Cowboy/Western', 'Militar', 'Glam', 'Grunge Revival',
-//   'Cyberpunk', 'Safari', 'Hipster', 'Moderno', 'Casual', 'Formal', 'Artsy',
-//   'Kawaii', 'Andrógino', 'Pin-up', 'Y2K',
-// ];
 
 const predefinedStyles = [
   { id: 'classico', name: 'Clássico' },
@@ -52,7 +45,7 @@ const predefinedStyles = [
   { id: 'formal', name: 'Formal'},
   { id: 'artsy', name: 'Artsy'},
   { id: 'kawaii', name: 'Kawaii'},
-  { id: 'androgino', name: 'Andrógino'},
+  { id: 'androgino', name: 'Coquette'},
   { id: 'pinup', name: 'Pin-up'},
   { id: 'y2k', name: 'Y2K'}
 ];
@@ -238,7 +231,7 @@ const EditarPerfil: React.FC = () => {
       {/* MENU LATERAL */}
       <div className="bg-[#EDECE7] w-[20%] flex flex-col items-center fixed h-[100vh] text-2xl">
         <div className="pt-12 flex flex-col items-center justify-center">
-          <Link to="/Feed">
+        <Link to={`/${username}/Feed`}>
             <img src={logo} width="200" alt="Logo" />
           </Link>
           <nav className="mt-12">

@@ -338,9 +338,9 @@ const handleDeleteAccount = async () => {
     {/* <!-- MENU LATERAL --> */}
 <div className="bg-[#EDECE7] w-[20%] flex flex-col items-center fixed h-[100vh] text-2xl ">
     <div className="pt-12 flex flex-col items-center justify-center">
-        <a href="index.html">
-            <img src={logo} width="200"/>
-        </a>
+        <Link to={`/${username}/Feed`}>
+            <img src={logo} width="200" alt="Logo" />
+          </Link>
         <nav className="mt-12">
             <ul className="">
                 <li className="my-2 mt-2">
