@@ -7,18 +7,20 @@ import gearIcon from '../../imagens/Icons/gear-icon.svg';
 import arrowDownIcon from '../../imagens/Icons/arrow-down-icon.svg';
 import closeIcon from '../../imagens/Icons/close-icon.svg';
 import needleIcon from '../../imagens/Icons/needle-icon.svg';
-import clipIcon from '../../imagens/Icons/clip-icon.svg'
-import kebabMenu from '../../imagens/Icons/kebab-menu-icon.svg'
-import saveIcon from '../../imagens/Icons/save-icon.svg'
-import sadIcon from '../../imagens/Icons/sad-icon.svg'
-import redflagIcon from '../../imagens/Icons/red-flag-icon.svg'
-import trashIcon from '../../imagens/Icons/trash-icon.svg'
-import blockIcon from '../../imagens/Icons/block-icon.svg'
-import muteIcon from '../../imagens/Icons/mute-icon.svg'
+import clipIcon from '../../imagens/Icons/clip-icon.svg';
+import kebabMenu from '../../imagens/Icons/kebab-menu-icon.svg';
+import saveIcon from '../../imagens/Icons/save-icon.svg';
+import sadIcon from '../../imagens/Icons/sad-icon.svg';
+import redflagIcon from '../../imagens/Icons/red-flag-icon.svg';
+import trashIcon from '../../imagens/Icons/trash-icon.svg';
+import blockIcon from '../../imagens/Icons/block-icon.svg';
+import muteIcon from '../../imagens/Icons/mute-icon.svg';
 import trashWhiteIcon from '../../imagens/Icons/trash-white-icon.svg';
-import cabideFeed from '../../imagens/cabide-feed.svg'
+import cabideFeed from '../../imagens/cabide-feed.svg';
 import bordaBtv from '../../imagens/borda-btv.svg';
 import bordaFeed from '../../imagens/borda-feed.svg';
+import meatballsMenuIcon from '../../imagens/Icons/meatballs-menu-icon.svg';
+import linhaModal from '../../imagens/linha-modal.svg';
 import bgforms from '../../imagens/bg-login.png';
 import previewProfileImage from '../../imagens/fotoPerfilGenerico.png';
 import axios from 'axios';
@@ -498,131 +500,171 @@ const handleDeleteAccount = async () => {
     className="w-[100vw] h-[100vh] fixed top-0 left-0 z-[5] bg-black bg-opacity-20"
     onClick={closePostModal}
 />
-                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[40rem] pt-4 px-4 flex flex-col bg-[#EDECE7] border border-black">
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[64rem] py-2 px-4 flex flex-col bg-[#EDECE7] border border-black">
                   <div className="flex justify-between items-center">
                     {post.foto && (
                       <img
                         src={`http://localhost:3000/uploads/${post.foto}`}
                         alt="Postagem"
-                        className="w-[12rem] h-[12rem] object-cover border border-black shadow-lg"
+                        className="w-[32rem] h-[32rem] object-cover border border-black shadow-lg"
                       />
                     )}
-                    <div className="flex flex-col ml-4">
+                    <div className="flex flex-col h-[32rem] justify-between my-2 ml-4">
                       <div className="flex justify-between items-center">
                         <div className="flex items-center">
                           <a>
                             <img src={previewProfileImage} width="30" className="rounded-full mr-2" />
                           </a>
                           <p>@{post.autor.nome}</p>
+                          <a className="ml-4 text-[#8AA66D] hover:cursor-pointer hover:underline">
+                            <p>Seguir</p>
+                          </a>
                         </div>
                         <button onClick={closePostModal} className="bg-transparent border-none">
                           <img src={closeIcon} width="15" />
                         </button>
                       </div>
-                      <div className="flex">
-                        <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
-                          <p className="pt-[0.8rem] text-center pr-4">Old money</p>
-                        </div>
-                        <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
-                          <p className="pt-[0.8rem] text-center pr-4">Old money</p>
-                        </div>
-                        <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem]">
-                          <p className="pt-[0.8rem] text-center pr-4">Old money</p>
-                        </div>
-                      </div>
+                      
                       <p className="mt-2">
                         <b>{post.autor.nome}</b> {post.conteudo}
                       </p>
-                      <div className="flex mt-6">
-                        <button>
-                          <svg
-                            width="24"
-                            height="22"
-                            viewBox="0 0 24 22"
-                            fill="none"
-                            className="hover:fill-[#F9C62E] mr-3"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M21.1721 11.7216L12.0102 21L2.84826 11.7216C2.24395 11.1203 1.76794 10.3976 1.45021 9.59892C1.13248 8.80027 0.979915 7.943 1.00212 7.08109C1.02432 6.21918 1.22081 5.37131 1.57922 4.59087C1.93763 3.81043 2.45019 3.11432 3.08462 2.54638C3.71905 1.97844 4.46162 1.55098 5.26555 1.2909C6.06949 1.03083 6.91738 0.943779 7.75583 1.03524C8.59429 1.12669 9.40514 1.39467 10.1373 1.82231C10.8695 2.24994 11.5072 2.82796 12.0102 3.51996C12.5153 2.83298 13.1538 2.26001 13.8854 1.83692C14.6171 1.41382 15.4263 1.14971 16.2624 1.06112C17.0985 0.972517 17.9435 1.06134 18.7445 1.32202C19.5455 1.5827 20.2853 2.00963 20.9175 2.57609C21.5497 3.14255 22.0607 3.83634 22.4186 4.61405C22.7766 5.39175 22.9736 6.23663 22.9975 7.0958C23.0214 7.95497 22.8716 8.80993 22.5575 9.60719C22.2434 10.4044 21.7718 11.1268 21.1721 11.7291"
-                              stroke="black"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </button>
-                        <button>
-                          <svg
-                            width="16"
-                            height="22"
-                            viewBox="0 0 16 22"
-                            fill="none"
-                            className="hover:fill-black"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M12.25 1H3.25C2.65326 1 2.08097 1.23705 1.65901 1.65901C1.23705 2.08097 1 2.65326 1 3.25V21.25L7.75 17.875L14.5 21.25V3.25C14.5 2.65326 14.2629 2.08097 13.841 1.65901C13.419 1.23705 12.8467 1 12.25 1Z"
-                              stroke="black"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </button>
+                      <div className="flex items-center justify-between mt-6">
+                        <div className="flex items-center">
+                          <button>
+                            <svg
+                              width="24"
+                              height="22"
+                              viewBox="0 0 24 22"
+                              fill="none"
+                              className="hover:fill-[#F9C62E] mr-3"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M21.1721 11.7216L12.0102 21L2.84826 11.7216C2.24395 11.1203 1.76794 10.3976 1.45021 9.59892C1.13248 8.80027 0.979915 7.943 1.00212 7.08109C1.02432 6.21918 1.22081 5.37131 1.57922 4.59087C1.93763 3.81043 2.45019 3.11432 3.08462 2.54638C3.71905 1.97844 4.46162 1.55098 5.26555 1.2909C6.06949 1.03083 6.91738 0.943779 7.75583 1.03524C8.59429 1.12669 9.40514 1.39467 10.1373 1.82231C10.8695 2.24994 11.5072 2.82796 12.0102 3.51996C12.5153 2.83298 13.1538 2.26001 13.8854 1.83692C14.6171 1.41382 15.4263 1.14971 16.2624 1.06112C17.0985 0.972517 17.9435 1.06134 18.7445 1.32202C19.5455 1.5827 20.2853 2.00963 20.9175 2.57609C21.5497 3.14255 22.0607 3.83634 22.4186 4.61405C22.7766 5.39175 22.9736 6.23663 22.9975 7.0958C23.0214 7.95497 22.8716 8.80993 22.5575 9.60719C22.2434 10.4044 21.7718 11.1268 21.1721 11.7291"
+                                stroke="black"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </button>
+                          <button>
+                            <svg
+                              width="16"
+                              height="22"
+                              viewBox="0 0 16 22"
+                              fill="none"
+                              className="hover:fill-black"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M12.25 1H3.25C2.65326 1 2.08097 1.23705 1.65901 1.65901C1.23705 2.08097 1 2.65326 1 3.25V21.25L7.75 17.875L14.5 21.25V3.25C14.5 2.65326 14.2629 2.08097 13.841 1.65901C13.419 1.23705 12.8467 1 12.25 1Z"
+                                stroke="black"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                        <div className="flex">
+                          <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
+                            <p className="pt-[0.8rem] text-center pr-4">Old money</p>
+                          </div>
+                          <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem] mr-2">
+                            <p className="pt-[0.8rem] text-center pr-4">Old money</p>
+                          </div>
+                          <div className="borda-btv bg-cover w-[7.6rem] h-[2.5rem]">
+                            <p className="pt-[0.8rem] text-center pr-4">Old money</p>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Comentários no modal */}
+                                        {/* Comentários no modal */}
                   <div className="mt-4">
-                    <h3 className="pb-6">Comentários</h3>
+                    <span>
+                      <img src={linhaModal} className="mb-4" />
+                    </span>
+                    <ul className="h-[14rem] overflow-y-scroll overflow-x-hidden custom-scroll">
                     {post.comentarios?.length > 0 ? (
                       post.comentarios.map((comentario) => (
-                        <ul key={comentario.id}>
-                          <li className="flex items-center mb-4">
-                            <img src={previewProfileImage} width="30" className="rounded-full mr-2" />
-                            <p>
-                              <b>{comentario.autor.nome}</b> - {comentario.conteudo}
-                            </p>
+                        <div key={comentario.id}>
+                          <li className="flex items-center justify-between mb-4">
+                          <div className="flex w-full items-center justify-between">
+                            <div className="flex items-center">
+                              <img src={previewProfileImage} width="30" className="rounded-full mr-2" />
+                              <div className="flex flex-col">
+                                <p>
+                                  <b>{comentario.autor.nome}</b> - {comentario.conteudo}
+                                </p>
+                                <span className="text-sm text-[#B1B1B1] items-center flex">
+                                    <span className="flex">
+                                        <p>201 curtidas</p>
+                                        <a className="ml-4">
+                                            <p>Responder</p>
+                                        </a>
+                                        <button className="ml-4">
+                                            <img src={meatballsMenuIcon} />
+                                        </button>
+                                    </span>
+                                </span>
+                              </div>
+                            </div>
+                            <button>
+                                <svg width="12" height="11" viewBox="0 0 24 22" fill="none" className="hover:fill-[#F9C62E] mr-3" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M21.1721 11.7216L12.0102 21L2.84826 11.7216C2.24395 11.1203 1.76794 10.3976 1.45021 9.59892C1.13248 8.80027 0.979915 7.943 1.00212 7.08109C1.02432 6.21918 1.22081 5.37131 1.57922 4.59087C1.93763 3.81043 2.45019 3.11432 3.08462 2.54638C3.71905 1.97844 4.46162 1.55098 5.26555 1.2909C6.06949 1.03083 6.91738 0.943779 7.75583 1.03524C8.59429 1.12669 9.40514 1.39467 10.1373 1.82231C10.8695 2.24994 11.5072 2.82796 12.0102 3.51996C12.5153 2.83298 13.1538 2.26001 13.8854 1.83692C14.6171 1.41382 15.4263 1.14971 16.2624 1.06112C17.0985 0.972517 17.9435 1.06134 18.7445 1.32202C19.5455 1.5827 20.2853 2.00963 20.9175 2.57609C21.5497 3.14255 22.0607 3.83634 22.4186 4.61405C22.7766 5.39175 22.9736 6.23663 22.9975 7.0958C23.0214 7.95497 22.8716 8.80993 22.5575 9.60719C22.2434 10.4044 21.7718 11.1268 21.1721 11.7291" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                          </div>
                           </li>
-                        </ul>
+                        </div>
+
+                        
                       ))
                     ) : (
-                      <p>Sem comentários.</p>
+                      <p className="text-[#B1B1B1]">Sem comentários.</p>
                     )}
-
-                    <div className="mt-8 flex">
-                      <img src={previewProfileImage} width="30" className="rounded-full mr-2" />
-                      <input
-                        type="text"
-                        placeholder="Comentar"
-                        className="bg-transparent"
-                        value={comentarios[post.id] || ''}
-                        onChange={(e) =>
-                          setComentarios({ ...comentarios, [post.id]: e.target.value })
-                        }
-                      />
+                    </ul>
+                    <span>
+                        <img src={linhaModal} className="mt-4" />
+                    </span>
+                    <div className="mt-8 flex justify-between">
+                      <div className="flex items-center">
+                        <img src={previewProfileImage} width="30" className="rounded-full mr-2" />
+                        <input
+                          type="text"
+                          placeholder="Comentar"
+                          className="bg-transparent"
+                          value={comentarios[post.id] || ''}
+                          onChange={(e) =>
+                            setComentarios({ ...comentarios, [post.id]: e.target.value })
+                          }
+                        />
+                      </div>
+                      <div className="self-end flex items-center justify-end">
+                        <a
+                          onClick={closePostModal}
+                          className="popup__close text-red-500 mr-6 hover:cursor-pointer"
+                        >
+                          Cancelar
+                        </a>
+                        <button
+                          className="bg-black cut-corner text-white flex py-2 px-4 hover:cursor-pointer"
+                          // onClick={() => handleAddComment(post.id)}
+                          onClick={(e) => {e.preventDefault(); handleAddComment(post.id);}}
+                        >
+                          <p className="mr-2" >Comentar</p>
+                          <img src={needleIcon} alt="Comentar" />
+                        </button>
+                        <input type="submit" className="hidden"/>
+                      </div>
                     </div>
 
-                    <div className="self-end flex items-center justify-end my-4">
-                      <a
-                        onClick={closePostModal}
-                        className="popup__close text-red-500 mr-6 hover:cursor-pointer"
-                      >
-                        Cancelar
-                      </a>
-                      <button
-                        className="bg-black cut-corner text-white flex py-2 px-4 hover:cursor-pointer"
-                        // onClick={() => handleAddComment(post.id)}
-                        onClick={(e) => {e.preventDefault(); handleAddComment(post.id);}}
-                      >
-                        <p className="mr-2" >Comentar</p>
-                        <img src={needleIcon} alt="Comentar" />
-                      </button>
-                      <input type="submit" className="hidden"/>
+                    
+                  </div>
                     </div>
                   </div>
+
+
                 </div>
               </div>
             )}
@@ -745,7 +787,7 @@ const handleDeleteAccount = async () => {
                             </svg>
                         </button>
                         <button 
-                        // onClick="location.href='#modal1'"
+                        onClick={() => openPostModal(post.id)}
                         >
                             <svg width="22" height="22" viewBox="0 0 22 22" fill="none" className=" mr-3" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12.0784 10.9967C12.0784 11.21 12.0152 11.4186 11.8967 11.5959C11.7782 11.7733 11.6098 11.9115 11.4127 11.9931C11.2156 12.0748 10.9988 12.0961 10.7896 12.0545C10.5804 12.0129 10.3883 11.9102 10.2374 11.7594C10.0866 11.6085 9.9839 11.4163 9.94229 11.2071C9.90068 10.9979 9.92204 10.7811 10.0037 10.584C10.0853 10.3869 10.2235 10.2185 10.4009 10.1C10.5782 9.98145 10.7867 9.91819 11 9.91819C11.286 9.91819 11.5603 10.0318 11.7626 10.2341C11.9648 10.4363 12.0784 10.7107 12.0784 10.9967ZM6.2549 9.91819C6.04161 9.91819 5.8331 9.98145 5.65576 10.1C5.47841 10.2185 5.34019 10.3869 5.25856 10.584C5.17694 10.7811 5.15558 10.9979 5.19719 11.2071C5.2388 11.4163 5.34151 11.6085 5.49234 11.7594C5.64316 11.9102 5.83532 12.0129 6.04451 12.0545C6.25371 12.0961 6.47054 12.0748 6.6676 11.9931C6.86466 11.9115 7.03309 11.7733 7.15159 11.5959C7.27008 11.4186 7.33333 11.21 7.33333 10.9967C7.33333 10.7107 7.21971 10.4363 7.01747 10.2341C6.81522 10.0318 6.54092 9.91819 6.2549 9.91819ZM15.7451 9.91819C15.5318 9.91819 15.3233 9.98145 15.146 10.1C14.9686 10.2185 14.8304 10.3869 14.7488 10.584C14.6671 10.7811 14.6458 10.9979 14.6874 11.2071C14.729 11.4163 14.8317 11.6085 14.9825 11.7594C15.1334 11.9102 15.3255 12.0129 15.5347 12.0545C15.7439 12.0961 15.9607 12.0748 16.1578 11.9931C16.3549 11.9115 16.5233 11.7733 16.6418 11.5959C16.7603 11.4186 16.8235 11.21 16.8235 10.9967C16.8235 10.7107 16.7099 10.4363 16.5077 10.2341C16.3054 10.0318 16.0311 9.91819 15.7451 9.91819ZM22 10.9967C22.0004 12.9038 21.5051 14.7782 20.5626 16.4361C19.6202 18.0939 18.263 19.4783 16.6242 20.4534C14.9854 21.4284 13.1213 21.9607 11.2147 21.9979C9.30819 22.0351 7.42473 21.5761 5.74912 20.6657L1.98863 21.919C1.72261 22.0077 1.43713 22.0206 1.16421 21.9561C0.891278 21.8917 0.641682 21.7526 0.443392 21.5543C0.245101 21.356 0.105954 21.1063 0.0415447 20.8334C-0.0228645 20.5604 -0.00998991 20.2749 0.0787256 20.0089L1.33186 16.2481C0.533027 14.7759 0.0808763 13.1407 0.00988664 11.4673C-0.0611031 9.79379 0.250943 8.12621 0.922232 6.59166C1.59352 5.05712 2.60632 3.69613 3.88342 2.61249C5.16051 1.52884 6.66816 0.751153 8.29142 0.338717C9.91468 -0.0737194 11.6107 -0.11001 13.2501 0.232611C14.8895 0.575233 16.429 1.28772 17.7513 2.31574C19.0736 3.34377 20.1437 4.66018 20.88 6.16461C21.6163 7.66903 21.9994 9.32174 22 10.9967ZM20.7059 10.9967C20.7055 9.50772 20.3627 8.03876 19.7038 6.7035C19.0449 5.36823 18.0877 4.20246 16.9062 3.29637C15.7248 2.39028 14.3507 1.76817 12.8903 1.47817C11.43 1.18817 9.92249 1.23805 8.4845 1.62396C7.0465 2.00987 5.71656 2.72146 4.59756 3.70367C3.47856 4.68588 2.60051 5.91238 2.03134 7.28828C1.46216 8.66418 1.21713 10.1526 1.31519 11.6384C1.41326 13.1241 1.85179 14.5674 2.59686 15.8566C2.64288 15.936 2.67149 16.0242 2.68079 16.1155C2.69009 16.2068 2.67986 16.2991 2.65078 16.3861L1.30706 20.4176C1.29439 20.4557 1.29255 20.4964 1.30175 20.5354C1.31095 20.5744 1.33083 20.6101 1.35915 20.6384C1.38748 20.6667 1.42314 20.6866 1.46213 20.6958C1.50112 20.705 1.5419 20.7032 1.5799 20.6905L5.60784 19.3467C5.67399 19.3249 5.74312 19.3136 5.81275 19.3132C5.92632 19.3139 6.03778 19.344 6.13627 19.4006C7.61186 20.2551 9.2865 20.7058 10.9916 20.7073C12.6967 20.7088 14.3722 20.261 15.8492 19.409C17.3263 18.557 18.5528 17.3309 19.4054 15.8541C20.258 14.3773 20.7066 12.702 20.7059 10.9967Z" fill="black"/>

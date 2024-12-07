@@ -38,7 +38,7 @@ const Landing: React.FC = () => {
           />
         </div>
       ) : (
-        <div className="bg-[#EDECE7] flex flex-col items-center">
+        <div className="bg-[#EDECE7] w-full flex flex-col items-center">
       {/* Navbar */}
       <nav className="flex justify-center w-full items-center px-8 py-4 bg-[#EDECE7] border-b border-black border-dashed " >
         <div className="w-11/12 flex justify-between items-center mx-0-auto">

@@ -294,7 +294,7 @@ const EditarPerfil: React.FC = () => {
         )}
         <form onSubmit={handleSubmit}>
           {/* Banner */}
-          <div className="w-full h-[40vh] flex items-center justify-center" id="banner-preview">
+          <div className="w-full flex items-center justify-center" id="banner-preview">
             {!previewBanner ? (
               <label htmlFor="banner" className="">
                 <img src={previewBannerImage} alt="Upload" className="mx-auto my-auto" />
