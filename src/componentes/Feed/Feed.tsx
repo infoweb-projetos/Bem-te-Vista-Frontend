@@ -45,6 +45,7 @@ interface Post {
   estilos?: string[];
   autor: User;
   comentarios: Comentario[];
+  likes: number;
 }
 
 interface NewPost {
@@ -331,7 +332,56 @@ const handleDeleteAccount = async () => {
       console.error('Erro ao excluir conta:', error);
       alert('Ocorreu um erro ao excluir sua conta. Detalhes: ' + errorMessage);
   }
+
+//
+
+const toggleLike = async (postId: string) => {
+  if (!token) {
+    console.error('Token não encontrado. O usuário deve estar autenticado.');
+    return;
+  }
+
+  try {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.error('ID do usuário não encontrado.');
+      return;
+    }
+
+    const response = await axios.post(
+      `${baseUrl}/${postId}/like`,
+      { userId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const { liked } = response.data;
+    updateLikes(postId, liked);
+  } catch (error) {
+    console.error('Erro ao alternar curtida:', error);
+  }
 };
+
+const updateLikes = (postId: string, liked: boolean) => {
+  setPostagens((prevPostagens) =>
+    prevPostagens.map((post) =>
+      post.id === postId
+        ? {
+            ...post,
+            likes: liked ? post.likes + 1 : post.likes - 1,
+          }
+        : post
+    )
+  );
+};
+
+
+
+};
+
   return (
     <div className="postagens-page" >
       <body className="flex">
@@ -530,7 +580,15 @@ const handleDeleteAccount = async () => {
                       </p>
                       <div className="flex items-center justify-between mt-6">
                         <div className="flex items-center">
-                          <button>
+                          
+                        <button onClick={async () => {
+                          try {
+                            await toggleLike(post.id); // Chama a função toggleLike com o ID do post
+                          } catch (error) {
+                            console.error("Erro ao alternar curtida:", error);
+                          }
+                        }}
+                          >
                             <svg
                               width="24"
                               height="22"
@@ -542,12 +600,13 @@ const handleDeleteAccount = async () => {
                               <path
                                 d="M21.1721 11.7216L12.0102 21L2.84826 11.7216C2.24395 11.1203 1.76794 10.3976 1.45021 9.59892C1.13248 8.80027 0.979915 7.943 1.00212 7.08109C1.02432 6.21918 1.22081 5.37131 1.57922 4.59087C1.93763 3.81043 2.45019 3.11432 3.08462 2.54638C3.71905 1.97844 4.46162 1.55098 5.26555 1.2909C6.06949 1.03083 6.91738 0.943779 7.75583 1.03524C8.59429 1.12669 9.40514 1.39467 10.1373 1.82231C10.8695 2.24994 11.5072 2.82796 12.0102 3.51996C12.5153 2.83298 13.1538 2.26001 13.8854 1.83692C14.6171 1.41382 15.4263 1.14971 16.2624 1.06112C17.0985 0.972517 17.9435 1.06134 18.7445 1.32202C19.5455 1.5827 20.2853 2.00963 20.9175 2.57609C21.5497 3.14255 22.0607 3.83634 22.4186 4.61405C22.7766 5.39175 22.9736 6.23663 22.9975 7.0958C23.0214 7.95497 22.8716 8.80993 22.5575 9.60719C22.2434 10.4044 21.7718 11.1268 21.1721 11.7291"
                                 stroke="black"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                             </svg>
                           </button>
+
                           <button>
                             <svg
                               width="16"
